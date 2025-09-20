@@ -8,3 +8,5 @@ local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. 
 local Options = {} -- Documentation here https://luau.github.io/UniversalSynSaveInstance/api/SynSaveInstance
 synsaveinstance(Options)
 ```
+## Credits
+[phoriah](https://github.com/phoriah)
