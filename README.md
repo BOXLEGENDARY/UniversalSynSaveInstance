@@ -9,4 +9,4 @@ local Options = {} -- Documentation here https://luau.github.io/UniversalSynSave
 synsaveinstance(Options)
 ```
 ## Credits
-[phoriah](https://github.com/phoriah)
+[phoriah]([https://github.com/phoriah](https://github.com/luau/UniversalSynSaveInstance))
