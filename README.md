@@ -1,8 +1,5 @@
 # Universal Syn Save Instance
-***Release***
-14/1/25
-
----
+**Release - 14/1/25**
 
 ## Loadstring
 ```lua
