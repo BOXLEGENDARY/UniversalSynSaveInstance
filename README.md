@@ -1,6 +1,8 @@
 # Universal Syn Save Instance
 **Release - 14/1/25**
 
+---
+
 ## Loadstring
 ```lua
 local Params = {
