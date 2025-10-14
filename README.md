@@ -14,4 +14,4 @@ local Options = {} -- Documentation here https://luau.github.io/UniversalSynSave
 synsaveinstance(Options)
 ```
 ## Credits
-[phoriah](https://github.com/luau/UniversalSynSaveInstance) - Owner
+[phoriah](https://github.com/luau/UniversalSynSaveInstance)
