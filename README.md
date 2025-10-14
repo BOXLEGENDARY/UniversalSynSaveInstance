@@ -1,5 +1,5 @@
 # Universal Syn Save Instance
-**Release - 14/10/25**\n
+**Release - 14/10/25**
 i didn't even test it lol
 
 ---
