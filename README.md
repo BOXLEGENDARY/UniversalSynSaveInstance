@@ -1,5 +1,4 @@
 # Universal Syn Save Instance
-**Release - 14/10/25**
 
 ---
 
