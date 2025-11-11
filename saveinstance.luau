@@ -1,6 +1,7 @@
 --!native
 --!optimize 2
 --!divine-intellect
+-- https://discord.gg/wx4ThpAsmw
 
 local function string_find(s, pattern)
 	return string.find(s, pattern, nil, true)
@@ -51,7 +52,7 @@ do
 		-- getcon = 'string.find(...,"get",nil,true) and (string.find(...,"conn",nil,true) or string.find(...,"sig",nil,true)) and string.sub(...,#(...))=="s"',
 		getnilinstances = 'string.find(...,"nil",nil,true) and string.find(...,"get",nil,true) and string.sub(...,#...) == "s"', -- ! Could match some unwanted stuff
 		getscriptbytecode = 'string.find(...,"get",nil,true) and string.find(...,"bytecode",nil,true)', --  or string.find(...,"dump",nil,true) and string.find(...,"string",nil,true) due to Fluxus (dumpstring returns a function)
-		hash = 'local a={...}local b=a[1]local function c(a,b)return string.find(a,b,nil,true)end;return c(b,"hash")and c(string.lower(tostring(a[2])),"crypt")',
+		-- hash = 'local a={...}local b=a[1]local function c(a,b)return string.find(a,b,nil,true)end;return c(b,"hash")and c(string.lower(tostring(a[2])),"crypt")',
 		protectgui = 'string.find(...,"protect",nil,true) and string.find(...,"ui",nil,true) and not string.find(...,"un",nil,true)',
 		setthreadidentity = 'string.find(...,"identity",nil,true) and string.find(...,"set",nil,true)',
 	}, true, 10)
@@ -71,7 +72,6 @@ local writefile = writefile
 
 local getscriptbytecode = global_container.getscriptbytecode -- * A lot of assumptions are made based on whether this function is defined or not. So in certain edge cases, like if the executor defines "decompile" or "getscripthash" function yet doesn't define this function there might be loss of functionality of the saveinstance. Although that would be very rare and weird
 local base64encode = global_container.base64encode
-local sha384
 
 local service = setmetatable({}, {
 	__index = function(self, serviceName)
@@ -166,67 +166,33 @@ do -- * Load Region of Déjà Vu
 			table.freeze(bit32)
 		end
 
-		-- Credits @Reselim
-		local reselim_base64encode
+		-- Credits @daily3014 & @XoifaiI
+		local rbxcrypt_base64encode
 		pcall(function()
 			local b64_enc_buf = loadstring(
-				game:HttpGet("https://raw.githubusercontent.com/BOXLEGENDARY/UniversalSynSaveInstance/refs/heads/main/Base64.lua", true),
+				game:HttpGet(
+					"https://raw.githubusercontent.com/BOXLEGENDARY/UniversalSynSaveInstance/refs/heads/main/Base64.luau",
+					true
+				),
 				"Base64"
-			)().encode
-			reselim_base64encode = function(raw)
+			)().Encode
+			rbxcrypt_base64encode = function(raw)
 				return buffer.tostring(b64_enc_buf(buffer.fromstring(raw)))
 			end
 		end)
 
 		-- * Tests if base64encode exists and works properly then benchmark it
 		if base64encode and base64encode("\1\0\0\0\1") == "AQAAAAE=" then
-			if reselim_base64encode then
-				base64encode = benchmark(base64encode, reselim_base64encode, test_str)
+			if rbxcrypt_base64encode then
+				base64encode = benchmark(base64encode, rbxcrypt_base64encode, test_str)
 			end
 		else
-			base64encode = reselim_base64encode
+			base64encode = rbxcrypt_base64encode
 		end
 
 		assert(base64encode, "base64encode not found")
 	end
-
-	do
-		local hash = global_container.hash
-
-		if hash then
-			sha384 = function(data)
-				return hash(data, "sha384")
-			end
-		end
-
-		local filename = "RequireOnlineModule"
-
-		-- Credits @boatbomber
-		local hashlib_sha384
-		pcall(function()
-			hashlib_sha384 = loadstring(
-				game:HttpGet("https://raw.githubusercontent.com/BOXLEGENDARY/UniversalSynSaveInstance/main/" .. filename .. ".luau", true),
-				filename
-			)()(4544052033).sha384
-		end)
-
-		-- * Tests if sha384 exists then benchmark it
-		if hashlib_sha384 then
-			if sha384 then
-				sha384 = benchmark(sha384, hashlib_sha384, test_str)
-			else
-				sha384 = hashlib_sha384
-			end
-		end
-
-		assert(sha384, "sha384 hash function not found")
-	end
 end
-
--- local custom_decompiler
-
--- if getscriptbytecode then
--- end
 
 local SharedStrings = {}
 local SharedString_identifiers = setmetatable({
@@ -234,7 +200,7 @@ local SharedString_identifiers = setmetatable({
 	-- TODO: worst case, add fallback to str randomizer once numbers run out : )
 }, {
 	__index = function(self, str)
-		local Identifier = base64encode(tostring(self.identifier)) -- tostring is only needed for built-in base64encode, Reselim's doesn't need it as buffers autoconvert
+		local Identifier = base64encode(tostring(self.identifier)) -- tostring is only needed for built-in base64encode, Luau base64 implementations don't need it as buffers autoconvert
 		self.identifier += 1
 
 		self[str] = Identifier -- ? The value of the md5 attribute is a Base64-encoded key. <SharedString> type elements use this key to refer to the value of the string. The value is the text content, which is Base64-encoded. Historically, the key was the MD5 hash of the string value. However, this is not required; the key can be any value that will uniquely identify the shared string. Roblox currently uses BLAKE2b truncated to 16 bytes..
@@ -272,7 +238,14 @@ local function index(self, index_name)
 	return self[index_name]
 end
 
-local CLIENT_VERSION = tonumber(string.split(version(), ".")[2])
+local version = version
+if not version then
+	version = function()
+		return "UNKNOWN"
+	end
+end
+
+local CLIENT_VERSION = tonumber(string.split(version(), ".")[2]) or 9e9 -- Velocity temp fix
 
 local attr_Type_IDs = {
 	string = 0x02,
@@ -568,11 +541,11 @@ Binary_Descriptors = {
 	["PhysicalProperties"] = function(raw) -- ? Not sure yet (https://github.com/RobloxAPI/spec/blob/master/properties/drafts/AttributesSerializeFull.md#physicalproperties)
 		local len = 1
 		if raw then
-			len += 20
+			len += 24
 		end
 		local b = buffer.create(len)
 
-		buffer.writeu8(b, 0, raw and 1 or 0)
+		buffer.writeu8(b, 0, raw and 3 or 0) -- 3 means it has set CustomPhysicalProperties & has set AcousticAbsorption
 
 		if raw then
 			buffer.writef32(b, 1, raw.Density)
@@ -580,6 +553,7 @@ Binary_Descriptors = {
 			buffer.writef32(b, 9, raw.Elasticity)
 			buffer.writef32(b, 13, raw.FrictionWeight)
 			buffer.writef32(b, 17, raw.ElasticityWeight)
+			buffer.writef32(b, 21, raw.AcousticAbsorption)
 		end
 
 		return b, len
@@ -853,6 +827,7 @@ XML_Descriptors = {
 				.. (EmptyStyle and "" or raw.Style.Name) -- Weird but this field accepts .Name of enum instead..
 				.. "</Style>"
 		end,
+	NetAssetRef = nil,
 	NumberRange = function(raw) -- tostring(raw) also works
 		-- The value is the text content, formatted as a space-separated list of floating point numbers.
 		local __NORMALIZE_RANGE = XML_Descriptors.__NORMALIZE_RANGE
@@ -884,6 +859,7 @@ XML_Descriptors = {
 			Elasticity
 			FrictionWeight
 			ElasticityWeight
+			AcousticAbsorption
 
 			The value of each component is represented by the text content formatted as a 32-bit floating point number (see float)
 		]]
@@ -891,7 +867,7 @@ XML_Descriptors = {
 		local CustomPhysics = "<CustomPhysics>" .. XML_Descriptors.bool(raw and true or false) .. "</CustomPhysics>"
 
 		return raw
-				and CustomPhysics .. "<Density>" .. raw.Density .. "</Density><Friction>" .. raw.Friction .. "</Friction><Elasticity>" .. raw.Elasticity .. "</Elasticity><FrictionWeight>" .. raw.FrictionWeight .. "</FrictionWeight><ElasticityWeight>" .. raw.ElasticityWeight .. "</ElasticityWeight>"
+				and CustomPhysics .. "<Density>" .. raw.Density .. "</Density><Friction>" .. raw.Friction .. "</Friction><Elasticity>" .. raw.Elasticity .. "</Elasticity><FrictionWeight>" .. raw.FrictionWeight .. "</FrictionWeight><ElasticityWeight>" .. raw.ElasticityWeight .. "</ElasticityWeight><AcousticAbsorption>" .. raw.AcousticAbsorption .. "</AcousticAbsorption>"
 			or CustomPhysics
 	end,
 	-- ProtectedString = function(raw) return tostring(raw), "ProtectedString" end,
@@ -928,7 +904,7 @@ XML_Descriptors = {
 		return Identifier
 	end,
 	SecurityCapabilities = nil,
-	-- SystemAddress = function(raw) return raw end, -- PeerId?  -- ? Not sure
+	-- SystemAddress = function(raw) return raw end, -- PeerId? systemAddress as a string in the format "IP|Port", "|" being portDelineator, should not be '.', ':', '%', '-', '/', a number, or a-f  -- ? Not sure
 	-- TweenInfo = function(raw) -- ? Not sure
 	-- 	local __NORMALIZE_NUMBER = XML_Descriptors.__NORMALIZE_NUMBER
 	-- 	local enum = XML_Descriptors.__ENUM
@@ -984,7 +960,7 @@ XML_Descriptors = {
 	-- 		them until we have to.
 	-- 	]]
 	-- 	-- https://github.com/MaximumADHD/Roblox-Client-Tracker/blob/roblox/LuaPackages/Packages/_Index/ApolloClientTesting/ApolloClientTesting/utilities/common/makeUniqueId.lua#L62
-	-- 	return ""
+	-- 	return raw -- seems to be string type by default
 	-- end,
 
 	Vector2 = function(raw)
@@ -1067,6 +1043,7 @@ do
 			LegacySound = 2 ^ 33, ----------  33 (0x21)
 			Players = 2 ^ 34, --------------  34 (0x22)
 			CapabilityControl = 2 ^ 35, ----  35 (0x23)
+			RemoteCommand = 2 ^ 59, --------  59 (0x3b)
 			InternalTest = 2 ^ 60, ---------  60 (0x3c), Related to TestingGameScript
 			PluginOrOpenCloud = 2 ^ 61, ----  61 (0x3d)
 			Assistant = 2 ^ 62, ------------  62 (0x3e)
@@ -1096,6 +1073,7 @@ end
 
 for descriptorName, redirectName in
 	{
+		NetAssetRef = "SharedString",
 		NumberSequence = "__SEQUENCE",
 		Vector2int16 = "Vector2",
 		Vector3int16 = "Vector3",
@@ -1116,7 +1094,11 @@ local ClassList
 
 do
 	local ClassPropertyExceptions = {
-		Whitelist = { TriangleMeshPart = ArrayToDict({ "CollisionFidelity" }) },
+		Whitelist = {
+			MeshPart = ArrayToDict({ "CollisionFidelity" }),
+			PartOperation = ArrayToDict({ "CollisionFidelity" }),
+			TriangleMeshPart = ArrayToDict({ "CollisionFidelity" }),
+		},
 		Blacklist = {
 			LuaSourceContainer = ArrayToDict({ "ScriptGuid" }),
 			Instance = ArrayToDict({ "UniqueId", "HistoryId" }),
@@ -1124,7 +1106,7 @@ do
 	}
 
 	local NotScriptableFixes = { --[[
-		For more info: 
+		For more info:
 		- https://github.com/luau/UniversalSynSaveInstance/blob/main/Tools/NotScriptable-Related/Potentially%20Missing%20Properties%20Dumper/Potentially%20Missing%20Properties%20Dumper.luau
 		- https://github.com/luau/UniversalSynSaveInstance/blob/main/Tools/NotScriptable-Related/NotScriptable%20Dumper/NotScriptable%20Dumper.py
 		]]
@@ -1389,7 +1371,7 @@ do
 		local API_Dump
 
 		local ok, err = pcall(function()
-			if EXECUTOR_NAME == "Zenith" or EXECUTOR_NAME == "Velocity" then -- TODO Temp fix as it crashes on HttpGet for sites that return 403 code
+			if EXECUTOR_NAME == "Velocity" then -- TODO Temp fix as it crashes on HttpGet for sites that return 403 code
 				return
 			end
 
@@ -1447,7 +1429,7 @@ do
 		end)
 
 		if not ok or not API_Dump then
-			warn("[DEBUG] Failed to get " .. version() .. " API Dump, trying latest..")
+			warn("[DEBUG] Failed to get " .. version() .. " version API Dump, trying latest..")
 			warn("[DEBUG]", err)
 			API_Dump = service.HttpService:JSONEncode(
 				service.HttpService:JSONDecode(
@@ -1609,7 +1591,7 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 --- @field SafeMode boolean -- Kicks you before Saving, which prevents you from being detected in any game. ___Default:___ false
 --- @field ShutdownWhenDone boolean -- Shuts the game down after saveinstance is finished. ___Default:___ false
 --- @field AntiIdle boolean -- Prevents the 20-minute-Idle Kick. ___Default:___ true
---- Anonymous {boolean|table{UserId = string, Name = string}} -- * **RISKY:** Cleans the file of any info related to your account like: Name, UserId. This is useful for some games that might store that info in GUIs or other Instances. Might potentially mess up parts of strings that contain characters that match your Name or parts of numbers that match your UserId. Can also be a table with UserId & Name keys. ___Default:___ false
+--- .Anonymous {boolean|table{UserId = string, Name = string}} -- * **RISKY:** Cleans the file of any info related to your account like: Name, UserId. This is useful for some games that might store that info in GUIs or other Instances. Might potentially mess up parts of strings that contain characters that match your Name or parts of numbers that match your UserId. Can also be a table with UserId & Name keys. ___Default:___ false
 --- @field ShowStatus boolean -- ___Default:___ true
 --- @field Callback function -- If set, the serialized data will be sent to the callback function instead of to file. ___Default:___ false
 --- @field mode string -- Valid modes: full, optimized, scripts. Change this to invalid mode like "invalid" if you only want ExtraInstances. "optimized" mode is **NOT** supported with *@Object* option. ___Default:___ `"optimized"`
@@ -1670,7 +1652,7 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 	local synsaveinstance = loadstring(game:HttpGet(Params.RepoURL .. Params.SSI .. ".luau", true), Params.SSI)()
 
 	local CustomOptions = { SafeMode = true, timeout = 15, SaveBytecode = true }
-	
+
 	synsaveinstance(CustomOptions)
 	```
 	@within SynSaveInstance
@@ -1709,7 +1691,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 		-- Binary = false, -- true in syn newer versions (false in our case because no binary support yet), Description: Saves everything in Binary Mode (rbxl/rbxm).
 		Callback = false,
-		--Clipboard/CopyToClipboard = false, -- Description: If set to true, the serialized data will be set to the clipboard, which can be later pasted into studio easily. Useful for saving models.
+		--Clipboard/CopyToClipboard = false, -- Description: If set to true, the serialized data will be set to the clipboard, which can be later pasted into studio easily. Useful for saving models. (Binary Only)
 		-- MaxThreads = 3 -- Description: The number of decompilation threads that can run at once. More threads means it can decompile for scripts at a time.
 		-- DisableCompression = false, --Description: Disables compression in the binary output
 
@@ -1754,21 +1736,25 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 		SaveNotCreatable = false,
 		NotCreatableFixes = {
-			-- "CloudLocalizationTable",
 			-- "InputObject",
 			-- "LodDataEntity",
 			-- "Path",
-			-- "Translator",
 			"", -- * FilteredSelection
+			"AdvancedDragger",
 			"AnimationTrack",
+			"Dragger",
 			"Player",
 			"PlayerGui",
-			"PlayerScripts",
 			"PlayerMouse",
+			"PlayerMouse",
+			"PlayerScripts",
 			"ScreenshotHud",
 			"StudioData",
+			"TextChatMessage",
 			"TextSource",
 			"TouchTransmitter",
+			"Translator",
+			CloudLocalizationTable = "LocalizationTable",
 		},
 
 		-- ! Risky
@@ -1911,17 +1897,35 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		-- TODO Look into https://robloxapi.github.io/ref/class/LuaSourceContainer.html#member-isPlayerScript
 		local DecompileIgnore = OPTIONS.DecompileIgnore
 
-		local Path = service.StarterPlayer:FindFirstChild("StarterPlayerScripts")
-		local Exclude = { ModuleScript = { "PlayerModule" }, LocalScript = { "RbxCharacterSounds" } }
-		if Path then
-			for _, className in Exclude do
-				for _, name in className do
-					local Found = Path:FindFirstChild(name)
-					if Found then
-						table.insert(DecompileIgnore, Found)
+		local default_scripts = ArrayToDict({
+			ModuleScript = { "PlayerModule" },
+			LocalScript = {
+				"BubbleChat",
+				"ChatScript",
+				"PlayerScriptsLoader",
+				"RbxCharacterSounds",
+			},
+		}, true)
+
+		local function ignorePath(path)
+			if path then
+				for _, child in path:GetChildren() do
+					local class_match = default_scripts[child.ClassName]
+					if class_match then
+						local name_match = class_match[child.Name]
+						if name_match then
+							table.insert(DecompileIgnore, child)
+						end
 					end
 				end
 			end
+		end
+
+		ignorePath(service.StarterPlayer:FindFirstChild("StarterPlayerScripts"))
+
+		local LocalPlayer = service.Players.LocalPlayer
+		if LocalPlayer then
+			ignorePath(LocalPlayer:FindFirstChild("PlayerScripts"))
 		end
 	end
 
@@ -2286,17 +2290,19 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 			ldecompile = function(script)
 				-- local name = scr.ClassName .. scr.Name
-				local hashed_bytecode
+				local bytecode
 				if ScriptCache then
-					local s, bytecode = getbytecode(script)
+					local s
+					s, bytecode = getbytecode(script)
 					local cached
 
 					if s then
 						if not bytecode or bytecode == "" then
 							return "-- The Script is Empty"
 						end
-						hashed_bytecode = sha384(bytecode)
-						cached = ldeccache[hashed_bytecode]
+						cached = ldeccache[bytecode]
+					else
+						bytecode = nil
 					end
 
 					if cached then
@@ -2326,8 +2332,8 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 					output = "--[[ Failed to decompile. Reason:\n" .. (result or "") .. "\n]]"
 				end
 
-				if ScriptCache and hashed_bytecode then -- TODO there might(?) be an edgecase where it manages to decompile (built-in) even though getscriptbytecode failed, and the output won't get cached
-					ldeccache[hashed_bytecode] = output -- ? Should we cache even if it timed out?
+				if ScriptCache and bytecode then -- TODO there might(?) be an edgecase where it manages to decompile (built-in) even though getscriptbytecode failed, and the output won't get cached
+					ldeccache[bytecode] = output -- ? Should we cache even if it timed out?
 					if __DEBUG_MODE then
 						__DEBUG_MODE("Cached", script:GetFullName())
 					end
@@ -2632,12 +2638,18 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						if not default_instance then
 							local ClassTags = ClassList[ClassName].Tags
 							if not (ClassTags and ClassTags.NotCreatable) then -- __api_dump_class_not_creatable__ also indicates this
-								-- ! NotCreatableFixes are exceptions to the check above meaning if we don't keep the NotCreatableFixes updated then Instance.new below might start erroring in the future potentially; HOWEVER IsPropertyModified solves this issue and no updates are really needed as NotCreatableFixes is up-to-date as of VERSION-HERE (which is when IPM gets enabled)
-								new_def_inst = Instance.new(ClassName) -- ! Assuming anything that doesn't have NotCreatable is possible to create (therefore no pcall); EXCEPTION NOTED ABOVE
+								-- NotCreatableFixes are exceptions to the check above meaning if we don't keep the NotCreatableFixes updated then Instance.new below might start erroring in the future potentially; HOWEVER IsPropertyModified solves this issue and no updates are really needed as NotCreatableFixes is up-to-date as of VERSION-HERE (which is when IPM gets enabled)
+								local ok, result = pcall(Instance.new, ClassName) -- ! pcall is needed for level 3 execs (for example TestService); EXCEPTION NOTED ABOVE (irrelevant)
 
-								default_instance = {}
+								if ok then
+									new_def_inst = result
 
-								default_instances[ClassName] = default_instance
+									default_instance = {}
+
+									default_instances[ClassName] = default_instance
+								elseif __DEBUG_MODE then
+									__DEBUG_MODE("Unable to create default Instance x2", ClassName, result)
+								end
 							elseif __DEBUG_MODE then
 								__DEBUG_MODE("Unable to create default Instance", ClassName)
 							end
@@ -2909,8 +2921,8 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local function save_game()
 		do
 			if IsModel then
-				--[[ 
-			-- ? Roblox encodes the following additional attributes. These are not required. Moreover, any defined schemas are ignored, and not required for a file to be valid: xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd"  
+				--[[
+			-- ? Roblox encodes the following additional attributes. These are not required. Moreover, any defined schemas are ignored, and not required for a file to be valid: xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd"
 			Also http can be converted to https but not sure if Roblox cares
 			-- ? <External>null</External><External>nil</External>  - <External> is a legacy concept that is no longer used.
 		]]
@@ -3009,7 +3021,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 		ServerStorage, ServerScriptService and Server Scripts are IMPOSSIBLE to save because of FilteringEnabled.
 
-		If your player cannot spawn into the game, please move the scripts in StarterPlayer somewhere else. Then run `game:GetService("Players").CharacterAutoLoads = true`.
+		If your player cannot spawn into the game, please move the scripts in StarterPlayer somewhere else or delete them. Then run `game:GetService("Players").CharacterAutoLoads = true`.
 		And use "Play Here" to start game instead of "Play" to spawn your Character where your Camera currently is.
 
 		If the chat system does not work, please use the explorer and delete everything inside the TextChatService/Chat service(s). 
