@@ -1,7 +1,7 @@
 # Universal Syn Save Instance
 
 ---
-## LoadString
+## Loadstring
 ```lua
 local Params = {
  RepoURL = "https://raw.githubusercontent.com/BOXLEGENDARY/UniversalSynSaveInstance/main/",
