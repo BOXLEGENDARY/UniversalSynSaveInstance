@@ -320,7 +320,7 @@ local CAPABILITY_BITS = {
 	----------------------------------- 13
 	----------------------------------- 14
 	Unassigned = 2 ^ 15, -------------- 15 (0xf)
-	AssetRequire = 2 ^ 16, ------------ 16 (0x10)
+	LoadUnownedAsset = 2 ^ 16, -------- 16 (0x10)
 	LoadString = 2 ^ 17, -------------- 17 (0x11)
 	ScriptGlobals = 2 ^ 18, ----------- 18 (0x12)
 	CreateInstances = 2 ^ 19, --------- 19 (0x13)
@@ -333,7 +333,7 @@ local CAPABILITY_BITS = {
 	CSG = 2 ^ 26, --------------------- 26 (0x1a)
 	Chat = 2 ^ 27, -------------------- 27 (0x1b)
 	Animation = 2 ^ 28, --------------- 28 (0x1c)
-	Avatar = 2 ^ 29, ------------------ 29 (0x1d)
+	AvatarAppearance = 2 ^ 29, -------- 29 (0x1d)
 	Input = 2 ^ 30, ------------------- 30 (0x1e)
 	Environment = 2 ^ 31, ------------- 31 (0x1f)
 	RemoteEvent = 2 ^ 32, ------------- 32 (0x20)
@@ -2122,7 +2122,8 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 --- @within SynSaveInstance
 --- @field __DEBUG_MODE boolean -- This will print debug logs to console about unusual scenarios. Recommended to enable if you wish to help us improve our products and find bugs / issues with it! ___Default:___ false
 --- @field ReadMe boolean --___Default:___ true
---- @field SafeMode boolean -- Kicks you before Saving, which prevents you from being detected in any game. ___Default:___ false
+--- @field SafeMode boolean -- Kicks you before Saving, which prevents you from being detected in any game. ___Default:___ true
+--- @field KillAllScripts boolean -- Kills all scripts to further protect you from detections. SafeMode also enables this by default. ___Default:___ true
 --- @field ShutdownWhenDone boolean -- Shuts the game down after saveinstance is finished. ___Default:___ false
 --- @field AntiIdle boolean -- Prevents the 20-minute-Idle Kick. ___Default:___ true
 --- .Anonymous {boolean|table{UserId = string, Name = string}} -- * **RISKY:** Cleans the file of any info related to your account like: Name, UserId. This is useful for some games that might store that info in GUIs or other Instances. Might potentially mess up parts of strings that contain characters that match your Name or parts of numbers that match your UserId. Can also be a table with UserId & Name keys. ___Default:___ false
@@ -2251,7 +2252,8 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 		SaveCacheInterval = 0x1600 * 10,
 		ShowStatus = true,
-		SafeMode = false,
+		KillAllScripts = true,
+		SafeMode = true,
 		ShutdownWhenDone = false,
 		AntiIdle = true,
 		Anonymous = false,
@@ -2306,7 +2308,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		TreatUnionsAsParts = EXECUTOR_NAME == "Solara", -- TODO Temporary true (once removed, remove Note from docs too)
 		AlternativeWritefile = not ArrayToDict({ "WRD", "Xeno", "Zorara" })[EXECUTOR_NAME],
 
-		OptionsAliases = { -- You can't really modify these as a user
+		OptionsAliases = { -- You can't really modify these as a user (because they're read before user's Options are loaded)
 			DecompileTimeout = "timeout",
 			FileName = "FilePath",
 			IgnoreArchivable = "IgnoreNotArchivable",
@@ -2524,6 +2526,11 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 	if __DEBUG_MODE and type(__DEBUG_MODE) ~= "function" then
 		__DEBUG_MODE = warn
+	end
+
+	local SafeMode = OPTIONS.SafeMode
+	if SafeMode then
+		OPTIONS.KillAllScripts = true
 	end
 
 	local FilePath = OPTIONS.FilePath
@@ -3862,6 +3869,54 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		end
 	end
 
+	local none = true
+	if OPTIONS.KillAllScripts then
+		-- * partial credits @centerepic
+
+		local self = coroutine.running()
+		do
+			local hookfunction = hookfunction
+			local islclosure = islclosure
+
+			local isexecutorclosure = isexecutorclosure or checkclosure or isourclosure
+			local function filterNkill(v)
+				local t = typeof(v)
+				if t == "thread" then
+					if v ~= self then
+						none = nil
+						pcall(coroutine.close, v)
+					end
+				elseif t == "function" then
+					if (not islclosure or islclosure(v)) and (not isexecutorclosure or not isexecutorclosure(v)) then
+						if hookfunction then
+							none = nil
+							pcall(hookfunction, v, coroutine.yield)
+						end
+					end
+				end
+			end
+
+			local reg = debug and debug.getregistry or getreg or getregistry
+			if reg then
+				for _, v in reg() do
+					filterNkill(v)
+				end
+			end
+
+			if getallthreads then
+				for _, v in getallthreads() do
+					filterNkill(v)
+				end
+			end
+
+			if getgc then
+				for _, v in getgc() do
+					filterNkill(v)
+				end
+			end
+		end
+	end
+
 	if IsolateStarterPlayer then
 		IgnoreList.StarterPlayer = false
 	end
@@ -3935,7 +3990,6 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	end
 
 	do
-		local SafeMode = OPTIONS.SafeMode
 		if SafeMode then
 			task.spawn(function()
 				local LocalPlayer = GetLocalPlayer()
@@ -3959,7 +4013,11 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 					}
 				end
 
-				LocalPlayer:Kick("\n[SAFEMODE] Saving in Progress..\nPlease do NOT leave")
+				LocalPlayer:Kick(
+					"\n[SAFEMODE] Saving..\nDo NOT leave\n"
+						.. (none and "[WARNING] LVL7 Executor RECOMMENDED for SAFETY\n" or "")
+						.. "To Disable this: SafeMode=false (Less Protection)"
+				)
 				wait_for_render()
 				task.delay(10, service.GuiService.ClearError, service.GuiService)
 			end)
