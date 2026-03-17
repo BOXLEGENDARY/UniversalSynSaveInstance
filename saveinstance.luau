@@ -3729,6 +3729,12 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local function Connect(event, func)
 		table.insert(Connections, event:Connect(func))
 	end
+	local function Cleanup()
+		for _, connection in Connections do
+			connection:Disconnect()
+		end
+		GLOBAL_ENV[placename] = nil
+	end
 	do
 		local Players = service.Players
 
@@ -3938,129 +3944,133 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			end)
 		end
 
-		do -- * Load Region of Déjà Vu
-			local UGCValidationService -- = service.UGCValidationService
+		if not ClassList then -- means first run
+			do -- * Load Region of Déjà Vu
+				local UGCValidationService -- = service.UGCValidationService
 
-			gethiddenproperty_fallback = function(instance, propertyName)
-				if not UGCValidationService then
-					UGCValidationService = service.UGCValidationService
+				gethiddenproperty_fallback = function(instance, propertyName)
+					if not UGCValidationService then
+						UGCValidationService = service.UGCValidationService
+					end
+					return UGCValidationService:GetPropertyValue(instance, propertyName) -- TODO Sadly there's no way to tell whether value is actually nil or the function just couldn't read it (always returns nil for "Class" category properties)
+					-- TODO `category ~= "Class"` causes WeldConstraint Part1Internal to be read as nil and not get unfiltered. Currently, there are no properties of category "Class" that match the following: NotScriptable, can be read with gethiddenproperty_fallback accurately (it always outputs nil for "Class" category, making that check useless anyway) & don't have a NotScriptableFix.
 				end
-				return UGCValidationService:GetPropertyValue(instance, propertyName) -- TODO Sadly there's no way to tell whether value is actually nil or the function just couldn't read it (always returns nil for "Class" category properties)
-				-- TODO `category ~= "Class"` causes WeldConstraint Part1Internal to be read as nil and not get unfiltered. Currently, there are no properties of category "Class" that match the following: NotScriptable, can be read with gethiddenproperty_fallback accurately (it always outputs nil for "Class" category, making that check useless anyway) & don't have a NotScriptableFix.
-			end
-			if gethiddenproperty then
-				local o, r = pcall(gethiddenproperty, workspace, "StreamOutBehavior")
-				if not o or r ~= nil and typeof(r) ~= "EnumItem" then -- * Tests if gethiddenproperty is broken
-					gethiddenproperty = nil
-				else
-					o, r = pcall(gethiddenproperty, Instance.new("AnimationRigData", Instance.new("Folder")), "parent") -- * Tests how it reacts to property overlap (shadowing) due to AnimationRigData.parent; expected BinaryString
-
-					if o and r ~= nil and type(r) ~= "string" then
+				if gethiddenproperty then
+					local o, r = pcall(gethiddenproperty, workspace, "StreamOutBehavior")
+					if not o or r ~= nil and typeof(r) ~= "EnumItem" then -- * Tests if gethiddenproperty is broken
 						gethiddenproperty = nil
-					end
-				end
-			end
-			local function benchmark(funcs, ...)
-				local ranking = table.create(2)
-				for i, f in funcs do
-					local start = os.clock()
-					for _ = 1, 50 do
-						f(...)
-					end
-					ranking[i] = { t = os.clock() - start, f = f }
-				end
-				table.sort(ranking, function(a, b)
-					return a.t < b.t
-				end)
-				return ranking[1].f
-			end
+					else
+						o, r =
+							pcall(gethiddenproperty, Instance.new("AnimationRigData", Instance.new("Folder")), "parent") -- * Tests how it reacts to property overlap (shadowing) due to AnimationRigData.parent; expected BinaryString
 
-			local test_str = string.rep("\1\0\0\0\1\2\3\4\5\6\7", 50)
-
-			do
-				if not bit32.byteswap or not pcall(bit32.byteswap, 1) then -- Because Fluxus is missing byteswap
-					bit32 = table.clone(bit32)
-
-					local function tobit(num)
-						num %= (bit32.bxor(num, 32))
-						if 0x80000000 < num then
-							num -= bit32.bxor(num, 32)
+						if o and r ~= nil and type(r) ~= "string" then
+							gethiddenproperty = nil
 						end
-						return num
 					end
-
-					bit32.byteswap = function(num)
-						local BYTE_SIZE = 8
-						local MAX_BYTE_VALUE = 255
-
-						num %= bit32.bxor(2, 32)
-
-						local a = bit32.band(num, MAX_BYTE_VALUE)
-						num = bit32.rshift(num, BYTE_SIZE)
-
-						local b = bit32.band(num, MAX_BYTE_VALUE)
-						num = bit32.rshift(num, BYTE_SIZE)
-
-						local c = bit32.band(num, MAX_BYTE_VALUE)
-						num = bit32.rshift(num, BYTE_SIZE)
-
-						local d = bit32.band(num, MAX_BYTE_VALUE)
-						num = tobit(
-							bit32.lshift(bit32.lshift(bit32.lshift(a, BYTE_SIZE) + b, BYTE_SIZE) + c, BYTE_SIZE) + d
-						)
-						return num
+				end
+				local function benchmark(funcs, ...)
+					local ranking = table.create(2)
+					for i, f in funcs do
+						local start = os.clock()
+						for _ = 1, 50 do
+							f(...)
+						end
+						ranking[i] = { t = os.clock() - start, f = f }
 					end
-
-					table.freeze(bit32)
+					table.sort(ranking, function(a, b)
+						return a.t < b.t
+					end)
+					return ranking[1].f
 				end
 
-				-- Credits @daily3014 & @XoifaiI
-				local rbxcrypt_base64encode
-				pcall(function()
-					local b64_enc_buf = loadstring(
-						game:HttpGet(
-							"https://raw.githubusercontent.com/daily3014/rbx-cryptography/refs/heads/main/src/Utilities/Base64.luau",
-							true
-						),
-						"Base64"
-					)().Encode
-					rbxcrypt_base64encode = function(raw)
-						return buffer.tostring(b64_enc_buf(buffer.fromstring(raw)))
-					end
-				end)
+				local test_str = string.rep("\1\0\0\0\1\2\3\4\5\6\7", 50)
 
-				local EncodingService = game:GetService("EncodingService")
-				local EncodingService_base64encode = function(raw)
-					return buffer.tostring(EncodingService:Base64Encode(buffer.fromstring(raw)))
+				do
+					if not bit32.byteswap or not pcall(bit32.byteswap, 1) then -- Because Fluxus is missing byteswap
+						bit32 = table.clone(bit32)
+
+						local function tobit(num)
+							num %= (bit32.bxor(num, 32))
+							if 0x80000000 < num then
+								num -= bit32.bxor(num, 32)
+							end
+							return num
+						end
+
+						bit32.byteswap = function(num)
+							local BYTE_SIZE = 8
+							local MAX_BYTE_VALUE = 255
+
+							num %= bit32.bxor(2, 32)
+
+							local a = bit32.band(num, MAX_BYTE_VALUE)
+							num = bit32.rshift(num, BYTE_SIZE)
+
+							local b = bit32.band(num, MAX_BYTE_VALUE)
+							num = bit32.rshift(num, BYTE_SIZE)
+
+							local c = bit32.band(num, MAX_BYTE_VALUE)
+							num = bit32.rshift(num, BYTE_SIZE)
+
+							local d = bit32.band(num, MAX_BYTE_VALUE)
+							num = tobit(
+								bit32.lshift(bit32.lshift(bit32.lshift(a, BYTE_SIZE) + b, BYTE_SIZE) + c, BYTE_SIZE) + d
+							)
+							return num
+						end
+
+						table.freeze(bit32)
+					end
+
+					-- Credits @daily3014 & @XoifaiI
+					local rbxcrypt_base64encode
+					pcall(function()
+						local b64_enc_buf = loadstring(
+							game:HttpGet(
+								"https://raw.githubusercontent.com/daily3014/rbx-cryptography/refs/heads/main/src/Utilities/Base64.luau",
+								true
+							),
+							"Base64"
+						)().Encode
+						rbxcrypt_base64encode = function(raw)
+							return buffer.tostring(b64_enc_buf(buffer.fromstring(raw)))
+						end
+					end)
+
+					local EncodingService = game:GetService("EncodingService")
+					local EncodingService_base64encode = function(raw)
+						return buffer.tostring(EncodingService:Base64Encode(buffer.fromstring(raw)))
+					end
+
+					-- * Tests if base64encode exists and works properly then benchmark it
+					if base64encode and base64encode("\1\0\0\0\1") == "AQAAAAE=" then
+						if rbxcrypt_base64encode then
+							base64encode = benchmark(
+								{ base64encode, rbxcrypt_base64encode, EncodingService_base64encode },
+								test_str
+							)
+						end
+					else
+						base64encode = rbxcrypt_base64encode
+					end
+
+					if not base64encode then
+						warn("base64encode not found")
+						Cleanup()
+						return
+					end
 				end
-
-				-- * Tests if base64encode exists and works properly then benchmark it
-				if base64encode and base64encode("\1\0\0\0\1") == "AQAAAAE=" then
-					if rbxcrypt_base64encode then
-						base64encode =
-							benchmark({ base64encode, rbxcrypt_base64encode, EncodingService_base64encode }, test_str)
-					end
+			end
+			do
+				local ok, result = pcall(FetchAPI)
+				if ok then
+					ClassList = result
 				else
-					base64encode = rbxcrypt_base64encode
-				end
-
-				if not base64encode then
-					warn("base64encode not found")
-					GLOBAL_ENV[placename] = nil
+					warn("Failed to load the API Dump")
+					warn(result)
+					Cleanup()
 					return
 				end
-			end
-		end
-
-		do
-			local ok, result = pcall(FetchAPI)
-			if ok then
-				ClassList = result
-			else
-				warn("Failed to load the API Dump")
-				warn(result)
-				GLOBAL_ENV[placename] = nil
-				return
 			end
 		end
 
@@ -4069,10 +4079,6 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		local ok, err = xpcall(save_game, function(err)
 			return debug.traceback(err)
 		end)
-
-		for _, connection in Connections do
-			connection:Disconnect()
-		end
 
 		if SafeMode then
 			pcall(function()
@@ -4090,7 +4096,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			gethiddenproperty = old_gethiddenproperty
 		end
 
-		GLOBAL_ENV[placename] = nil
+		Cleanup()
 
 		elapse_t = os.clock() - elapse_t
 		local Log10 = math.log10(elapse_t)
