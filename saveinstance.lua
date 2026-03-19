@@ -128,7 +128,8 @@ if not version then -- ? just in case
 	end
 end
 
-local CLIENT_VERSION = tonumber(string.split(version(), ".")[2]) or 9e9
+local FULL_VERSION = version()
+local CLIENT_VERSION = tonumber(string.match(FULL_VERSION, "%d+%.(%d+)")) or 9e9
 
 local attr_Type_IDs = {
 	string = 0x02,
@@ -572,7 +573,7 @@ Binary_Descriptors = {
 	["Region3int16"] = function(raw)
 		return Binary_Descriptors.__PACK_MULTIPLE(Binary_Descriptors["Vector3int16"], raw.Min, raw.Max)
 	end,
-	["Font"] = 636 < CLIENT_VERSION and function(raw)
+	["Font"] = function(raw)
 		local string__descriptor = Binary_Descriptors["string"]
 
 		local b_Family, Family_size = string__descriptor(raw.Family)
@@ -586,27 +587,6 @@ Binary_Descriptors = {
 
 		buffer.writeu16(b, 0, ok_w and weight.Value or 0)
 		buffer.writeu8(b, 2, ok_s and style.Value or 0)
-
-		buffer.copy(b, 3, b_Family)
-		buffer.copy(b, 3 + Family_size, b_CachedFaceId)
-
-		return b, len
-	end or function(raw)
-		local string__descriptor = Binary_Descriptors["string"]
-
-		local b_Family, Family_size = string__descriptor(raw.Family)
-		local b_CachedFaceId, CachedFaceId_size = string__descriptor("")
-
-		local len = 3 + Family_size + CachedFaceId_size
-		local b = buffer.create(len)
-
-		local FontString = tostring(raw)
-
-		local EmptyWeight = string_find(FontString, "Weight = ,")
-		local EmptyStyle = string_find(FontString, "Style =  }")
-
-		buffer.writeu16(b, 0, EmptyWeight and 0 or raw.Weight.Value)
-		buffer.writeu8(b, 2, EmptyStyle and 0 or raw.Style.Value)
 
 		buffer.copy(b, 3, b_Family)
 		buffer.copy(b, 3 + Family_size, b_CachedFaceId)
@@ -857,7 +837,7 @@ XML_Descriptors = {
 		-- The text of this element is formatted as an integer between 0 and 63
 		return "<faces>" .. __COUNT_BITS(raw.Right, raw.Top, raw.Back, raw.Left, raw.Bottom, raw.Front) .. "</faces>"
 	end,
-	Font = 636 < CLIENT_VERSION and function(raw)
+	Font = function(raw)
 		-- TODO (OPTIONAL ELEMENT): Figure out how to determine (ContentId) <CachedFaceId><url>rbxasset://fonts/GothamSSm-Medium.otf</url></CachedFaceId>
 		--[[
 		? game:GetService("TextService"):GetFontMemoryData()
@@ -873,19 +853,6 @@ XML_Descriptors = {
 			.. (ok_w and XML_Descriptors.EnumItem(weight) or "")
 			.. "</Weight><Style>"
 			.. (ok_s and style.Name or "") -- Weird but this field accepts .Name of enum instead..
-			.. "</Style>"
-	end or function(raw)
-		local FontString = tostring(raw)
-
-		local EmptyWeight = string_find(FontString, "Weight = ,")
-		local EmptyStyle = string_find(FontString, "Style =  }")
-
-		return "<Family>"
-			.. XML_Descriptors.ContentId(raw.Family)
-			.. "</Family><Weight>"
-			.. (EmptyWeight and "" or XML_Descriptors.EnumItem(raw.Weight))
-			.. "</Weight><Style>"
-			.. (EmptyStyle and "" or raw.Style.Name) -- Weird but this field accepts .Name of enum instead..
 			.. "</Style>"
 	end,
 	NetAssetRef = nil,
@@ -1399,13 +1366,15 @@ do
 		AnimationClip = {
 			GuidBinaryString = function(instance) -- RobloxScriptSecurity
 				local cleanGuid = string.gsub(instance.Guid, "[{}-]", "")
-				local bytes = table.create(16)
-				for i = 1, 32, 2 do
-					local hexByte = string.sub(cleanGuid, i, i + 1)
-					local byte = tonumber(hexByte, 16)
-					table.insert(bytes, string.char(byte))
+				local bytes = buffer.create(16)
+
+				for i = 0, 15 do
+					local hexByte = string.sub(cleanGuid, (i * 2) + 1, (i * 2) + 2)
+					local val = tonumber(hexByte, 16) or 0
+					buffer.writeu8(bytes, i, val)
 				end
-				return table.concat(bytes)
+
+				return buffer.tostring(bytes)
 			end,
 		},
 		AnimationRigData = {
@@ -1742,78 +1711,214 @@ do
 
 		local API_Dump
 
-		local ok, err = pcall(function()
-			local CLIENT_VERSION_str = tostring(CLIENT_VERSION)
-			local ok, result = pcall(readfile, CLIENT_VERSION_str)
-			if
-				ok
-				and result
-				and result ~= ""
-				and pcall(service.HttpService.JSONDecode, service.HttpService, result)
-			then
-				API_Dump = result
-				return
-			end
+		local Max_SecurityCapabilities = SecurityCapabilities.new(unpack(Enum.SecurityCapability:GetEnumItems()))
+		local filter = { Security = Max_SecurityCapabilities, ExcludeDisplay = true, ExcludeInherited = true }
 
-			local matching_versions, matched, is_matched = {}, {}
+		-- ! exact version match is preferred, mismatched dump versions might result in saveinstance trying to save properties that your client doesn't have yet
+		local APIDUMP_FETCHERS = {
+			[1] = function()
+				local res = readfile(FULL_VERSION)
+				if res and res ~= "" and service.HttpService:JSONDecode(res) then
+					return res
+				end
+			end,
+			[2] = function() -- version-history.json -> exact_match -> zbeta -> LIVE -> sibling major matches
+				local client_version_str = tostring(CLIENT_VERSION)
 
-			-- * https://setup.rbxcdn.com/versionQTStudio seems to be a bit behind DeployHistory.txt
-			-- ! Deploy History is preferred due to:
-			-- ! - accuracy (matches your build perfectly, mismatched dump versions might result in saveinstance trying to save properties that your client doesn't have yet)
-			-- ! - latency (Roblox-Client-Tracker might fall behind DeployHistory sometimes)
-			local DeployHistory = string.split(game:HttpGet("https://setup.rbxcdn.com/DeployHistory.txt", true), "\n")
-			for i = #DeployHistory, 1, -1 do
-				local line = DeployHistory[i]
-
-				local file_version = string.match(line, "file version: ([%d, ]+)")
-				if file_version then
-					if string.split(file_version, ", ")[2] == CLIENT_VERSION_str then
+				local dump
+				local matching_versions, matched, is_matched, exact_match = {}, {}
+				local function process_line(line, noinsert)
+					local file_version, patch_commit, version_hash =
+						string.match(line, '"%d+%.(%d+)%.([^"]+)": "(version%-[^"]+)')
+					if file_version == client_version_str then
 						is_matched = true
 
-						local version_hash = string.match(line, "(version%-[^%s]+)")
-						if version_hash and not matched[version_hash] then
+						if version_hash and not matched[version_hash] then -- ! this might cause issues if different file_versions point to the same version_hash (never happened)
 							matched[version_hash] = true
-							table.insert(matching_versions, version_hash) -- ? Retain the order (by latest)
+							if not noinsert then -- to avoid fetching duplicates
+								table.insert(matching_versions, version_hash) -- ? Retain the order (by latest)
+							end
+							if string.sub(FULL_VERSION, -#patch_commit) == patch_commit then
+								return version_hash -- exact match
+							end
 						end
 					elseif is_matched then
-						break
+						return false -- stop iteration
 					end
 				end
-			end
-
-			for _, version_hash in next, matching_versions do
-				ok, result = pcall(
-					game.HttpGet,
-					game,
-					"https://setup.rbxcdn.com/" .. version_hash .. "-Full-API-Dump.json",
-					true
-				)
-				if ok then
-					local o, r = pcall(service.HttpService.JSONDecode, service.HttpService, result)
-					if o then
-						API_Dump = service.HttpService:JSONEncode(r.Classes) -- minify it
-						break
-					end
+				local function fetchFullApiDump(hash)
+					local ok, res = pcall(function()
+						local raw = game:HttpGet("https://setup.rbxcdn.com/" .. hash .. "-Full-API-Dump.json", true) -- Seems like only hashes for WindowsStudio64 are supported
+						return service.HttpService:JSONEncode(service.HttpService:JSONDecode(raw).Classes) -- minify it
+					end)
+					return ok and res or nil
 				end
-			end
-			if writefile then
-				writefile(CLIENT_VERSION_str, API_Dump)
-			end
-		end)
 
-		if not ok or not API_Dump then
-			if err then
-				warn("[DEBUG] Failed to get " .. version() .. " version API Dump, trying latest..")
-				warn("[DEBUG]", err)
-			end
-			API_Dump = service.HttpService:JSONEncode(
-				service.HttpService:JSONDecode(
-					game:HttpGet(
-						"https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/Mini-API-Dump.json",
+				do
+					local o, r = pcall(
+						game.HttpGet,
+						game,
+						"https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/version-history.json",
 						true
 					)
-				).Classes
-			)
+					if o then
+						local version_history = string.split(r, "\n")
+						version_history[#version_history] = nil -- the "}"
+						-- 1. version-history pass (bottom-up)
+						for i = #version_history, 2, -1 do -- 2 to avoid "{"
+							local res = process_line(version_history[i])
+							if res == false then
+								break
+							elseif res then
+								exact_match = res
+							end
+						end
+					end
+				end
+
+				do -- ? this might happen when user is on a new version but Roblox-Client-Tracker hasn't updated version-history.json yet
+					local function fallback_channel(channel)
+						local ok, res = pcall(function()
+							return service.HttpService:JSONDecode(
+								game:HttpGet(
+									"https://clientsettings.rbxcdn.com/v2/client-version/WindowsStudio64"
+										.. (channel and "/channel/" .. channel or ""),
+									true
+								)
+							)
+						end)
+						if not ok then
+							return
+						end
+
+						local line = '"' .. res.version .. '": "' .. res.clientVersionUpload
+						return process_line(line, true)
+					end
+
+					if not exact_match then
+						exact_match = fallback_channel("zbeta") or fallback_channel() -- LIVE
+					end
+				end
+
+				if exact_match then
+					dump = fetchFullApiDump(exact_match)
+				end
+
+				if not dump then
+					for _, version_hash in next, matching_versions do
+						dump = fetchFullApiDump(version_hash)
+						if dump then
+							break
+						end
+					end
+				end
+
+				return dump
+			end,
+			[3] = function()
+				-- TODO At the time of writing this is missing a way to confirm NotCreatable & NotScriptable
+				local classes, classes_size = {}, 1
+
+				for _, api_class in next, service.ReflectionService:GetClasses(filter) do
+					local members, members_size = {}, 1
+					local className = api_class.Name
+
+					local class = {
+						Name = className,
+						Members = members,
+						Superclass = api_class.Superclass,
+					}
+					local permits = api_class.Permits
+
+					local tags = {}
+					if api_class.Service then
+						table.insert(tags, "Service")
+					elseif permits and permits["GetService"] then
+						table.insert(tags, "Service")
+					elseif not permits or not permits["New"] then -- Some services can be Instance.new so it's better to include them
+						table.insert(tags, "NotCreatable")
+					end
+
+					if #tags ~= 0 then
+						class.Tags = tags
+					end
+
+					local o, r = pcall(
+						service.ReflectionService.GetPropertiesOfClass,
+						service.ReflectionService,
+						className,
+						filter
+					) -- ? Might produce errors (ex. RolloutValidation) therefore pcall
+					if o then
+						for _, property in next, r do
+							local propertyName = property.Name
+
+							local valueType = property.Type
+							local valueType_Name = valueType.EngineType
+
+							local category = valueType.Category
+
+							if valueType_Name == "Enum" then
+								category, valueType_Name = "Enum", valueType.EnumType
+							elseif valueType_Name == "RefType" then
+								category, valueType_Name = "Class", valueType.InstanceType
+							else
+								local renames = {
+									CoordinateFrame = "CFrame",
+									Rect2D = "Rect",
+									Vector3Int16 = "Vector3int16",
+									Vector2Int16 = "Vector2int16",
+								}
+								valueType_Name = renames[valueType_Name] or valueType_Name
+							end
+
+							local member = {
+								Name = propertyName,
+								MemberType = "Property",
+								ValueType = { Name = valueType_Name, Category = category },
+								Serialization = { CanLoad = property.Serialized, CanSave = property.Serialized },
+								-- Default = Member.Default,
+								-- Special = Special,
+								-- Tags = MemberTags,
+							}
+
+							members[members_size] = member
+							members_size = members_size + 1
+						end
+						-- else
+						-- warn("Missing", className, r)
+					end
+					classes[classes_size] = class
+					classes_size = classes_size + 1
+				end
+
+				return service.HttpService:JSONEncode(classes)
+			end,
+			[4] = function()
+				return service.HttpService:JSONEncode(
+					service.HttpService:JSONDecode(
+						game:HttpGet(
+							"https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/roblox/Mini-API-Dump.json",
+							true
+						)
+					).Classes
+				)
+			end,
+		}
+		for i, fetcher in next, APIDUMP_FETCHERS do
+			local o, r = pcall(fetcher)
+			if o and r then
+				API_Dump = r
+				if i ~= 1 and i ~= #APIDUMP_FETCHERS then -- relies on readfile being first priority
+					if writefile then
+						writefile(FULL_VERSION, API_Dump)
+					end
+				end
+				break
+			elseif r and 2 < i then
+				warn("[DEBUG] Failed to get", FULL_VERSION, "version API Dump, trying fallbacks..")
+				warn("[DEBUG] Method number:", i, "Reason:", r)
+			end
 		end
 
 		local classList = {}
@@ -1842,8 +1947,6 @@ do
 			tmp_classDict[ClassName] = props
 		end
 
-		local Max_SecurityCapabilities = SecurityCapabilities.new(unpack(Enum.SecurityCapability:GetEnumItems()))
-		local filter = { Security = Max_SecurityCapabilities, ExcludeDisplay = true, ExcludeInherited = true }
 		-- Second pass (actual)
 		for _, API_Class in next, API_Dump_Decoded do
 			local ClassProperties, ClassProperties_size = {}, 1
@@ -3057,7 +3160,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 	local function save_hierarchy(hierarchy)
 		for _, instance in next, hierarchy do
-			local __DARKLUA_CONTINUE_61 = false
+			local __DARKLUA_CONTINUE_64 = false
 			repeat
 				local InstanceOverride, ClassTagOverride, ClassNameOverride
 
@@ -3074,20 +3177,20 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 				if not ClassTagOverride then -- ! Assuming anything that has __ClassName comes from save_extra
 					if IgnoreNotArchivable and not instance.Archivable then
-						__DARKLUA_CONTINUE_61 = true
+						__DARKLUA_CONTINUE_64 = true
 						break
 					end
 
 					SkipEntirely = IgnoreList[instance]
 					if SkipEntirely then
-						__DARKLUA_CONTINUE_61 = true
+						__DARKLUA_CONTINUE_64 = true
 						break
 					end
 
 					do
 						local OnIgnoredList = IgnoreList[ClassName]
 						if OnIgnoredList and (OnIgnoredList == true or OnIgnoredList[InstanceName]) then
-							__DARKLUA_CONTINUE_61 = true
+							__DARKLUA_CONTINUE_64 = true
 							break
 						end
 					end
@@ -3116,7 +3219,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 							if SaveNotCreatable then
 								ClassName, InstanceOverride = Fix, replaceClassName(instance, InstanceName, ClassName)
 							else
-								__DARKLUA_CONTINUE_61 = true
+								__DARKLUA_CONTINUE_64 = true
 								break -- They won't show up in Studio anyway (Enable SaveNotCreatable if you wish to bypass this)
 							end
 						else -- ! Assuming nothing that is a PartOperation or inherits from it is in NotCreatableFixes
@@ -3175,19 +3278,19 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 						end
 
 						for _, Property in next, GetInheritedProps(ClassNameOverride or ClassName) do
-							local __DARKLUA_CONTINUE_62 = false
+							local __DARKLUA_CONTINUE_65 = false
 							repeat
 								local PropertyName = Property.Name
 
 								if IgnoreProperties[PropertyName] then
-									__DARKLUA_CONTINUE_62 = true
+									__DARKLUA_CONTINUE_65 = true
 									break
 								end
 
 								local ValueType = Property.ValueType
 
 								if IgnoreSharedStrings and ValueType == "SharedString" then -- ? More info in Options
-									__DARKLUA_CONTINUE_62 = true
+									__DARKLUA_CONTINUE_65 = true
 									break
 								end
 
@@ -3199,7 +3302,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 								if raw == __BREAK then -- ! Assuming __BREAK is always returned when there's a failure to read a property
 									local GHPFFailed, Fallback = Property.GHPFFailed, Property.Fallback
 									if GHPFFailed and not Fallback then
-										__DARKLUA_CONTINUE_62 = true
+										__DARKLUA_CONTINUE_65 = true
 										break
 									end
 
@@ -3227,13 +3330,13 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 											if __DEBUG_MODE then
 												__DEBUG_MODE("Fix Failed", PropertyName, result)
 											end
-											__DARKLUA_CONTINUE_62 = true
+											__DARKLUA_CONTINUE_65 = true
 											break
 										end
 									end
 
 									if raw == __BREAK then
-										__DARKLUA_CONTINUE_62 = true
+										__DARKLUA_CONTINUE_65 = true
 										break
 									end
 								end
@@ -3254,7 +3357,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 										default_instance[PropertyName] = index(new_def_inst, PropertyName)
 									end
 									if default_instance[PropertyName] == raw then
-										__DARKLUA_CONTINUE_62 = true
+										__DARKLUA_CONTINUE_65 = true
 										break
 									end
 								end
@@ -3274,7 +3377,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 													or ValueType ~= "Instance" and ValueType ~= Fix
 												)
 											then -- * To avoid errors
-												__DARKLUA_CONTINUE_62 = true
+												__DARKLUA_CONTINUE_65 = true
 												break
 											end
 										end
@@ -3396,7 +3499,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 											if Descriptor then
 												if raw == nil then
-													__DARKLUA_CONTINUE_62 = true -- * It can be empty, because it's optional
+													__DARKLUA_CONTINUE_65 = true -- * It can be empty, because it's optional
 													-- ? Though why even save it if it's empty considering it's optional
 													break
 												-- value, tag = "", ValueType
@@ -3414,9 +3517,9 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 								else --if __DEBUG_MODE then -- * We print this anyway because very important
 									warn("UNSUPPORTED TYPE (OPEN A GITHUB ISSUE): ", ValueType, ClassName, PropertyName)
 								end
-								__DARKLUA_CONTINUE_62 = true
+								__DARKLUA_CONTINUE_65 = true
 							until true
-							if not __DARKLUA_CONTINUE_62 then
+							if not __DARKLUA_CONTINUE_65 then
 								break
 							end
 						end
@@ -3443,9 +3546,9 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 				savebuffer[savebuffer_size] = "</Item>"
 				savebuffer_size = savebuffer_size + 1
-				__DARKLUA_CONTINUE_61 = true
+				__DARKLUA_CONTINUE_64 = true
 			until true
-			if not __DARKLUA_CONTINUE_61 then
+			if not __DARKLUA_CONTINUE_64 then
 				break
 			end
 		end
@@ -3631,7 +3734,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 					.. " PlaceVersion: "
 					.. game.PlaceVersion
 					.. " Client Version: "
-					.. version()
+					.. FULL_VERSION
 					.. " Executor: "
 					.. (identify_executor and table.concat({ identify_executor() }, " ") or "Unknown")
 					.. "\n]]"
@@ -3760,6 +3863,12 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	local Connections = {}
 	local function Connect(event, func)
 		table.insert(Connections, event:Connect(func))
+	end
+	local function Cleanup()
+		for _, connection in next, Connections do
+			connection:Disconnect()
+		end
+		GLOBAL_ENV[placename] = nil
 	end
 	do
 		local Players = service.Players
@@ -3970,129 +4079,133 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			end)
 		end
 
-		do -- * Load Region of Déjà Vu
-			local UGCValidationService -- = service.UGCValidationService
+		if not ClassList then -- means first run
+			do -- * Load Region of Déjà Vu
+				local UGCValidationService -- = service.UGCValidationService
 
-			gethiddenproperty_fallback = function(instance, propertyName)
-				if not UGCValidationService then
-					UGCValidationService = service.UGCValidationService
+				gethiddenproperty_fallback = function(instance, propertyName)
+					if not UGCValidationService then
+						UGCValidationService = service.UGCValidationService
+					end
+					return UGCValidationService:GetPropertyValue(instance, propertyName) -- TODO Sadly there's no way to tell whether value is actually nil or the function just couldn't read it (always returns nil for "Class" category properties)
+					-- TODO `category ~= "Class"` causes WeldConstraint Part1Internal to be read as nil and not get unfiltered. Currently, there are no properties of category "Class" that match the following: NotScriptable, can be read with gethiddenproperty_fallback accurately (it always outputs nil for "Class" category, making that check useless anyway) & don't have a NotScriptableFix.
 				end
-				return UGCValidationService:GetPropertyValue(instance, propertyName) -- TODO Sadly there's no way to tell whether value is actually nil or the function just couldn't read it (always returns nil for "Class" category properties)
-				-- TODO `category ~= "Class"` causes WeldConstraint Part1Internal to be read as nil and not get unfiltered. Currently, there are no properties of category "Class" that match the following: NotScriptable, can be read with gethiddenproperty_fallback accurately (it always outputs nil for "Class" category, making that check useless anyway) & don't have a NotScriptableFix.
-			end
-			if gethiddenproperty then
-				local o, r = pcall(gethiddenproperty, workspace, "StreamOutBehavior")
-				if not o or r ~= nil and typeof(r) ~= "EnumItem" then -- * Tests if gethiddenproperty is broken
-					gethiddenproperty = nil
-				else
-					o, r = pcall(gethiddenproperty, Instance.new("AnimationRigData", Instance.new("Folder")), "parent") -- * Tests how it reacts to property overlap (shadowing) due to AnimationRigData.parent; expected BinaryString
-
-					if o and r ~= nil and type(r) ~= "string" then
+				if gethiddenproperty then
+					local o, r = pcall(gethiddenproperty, workspace, "StreamOutBehavior")
+					if not o or r ~= nil and typeof(r) ~= "EnumItem" then -- * Tests if gethiddenproperty is broken
 						gethiddenproperty = nil
-					end
-				end
-			end
-			local function benchmark(funcs, ...)
-				local ranking = table.create(2)
-				for i, f in next, funcs do
-					local start = os.clock()
-					for _ = 1, 50 do
-						f(...)
-					end
-					ranking[i] = { t = os.clock() - start, f = f }
-				end
-				table.sort(ranking, function(a, b)
-					return a.t < b.t
-				end)
-				return ranking[1].f
-			end
+					else
+						o, r =
+							pcall(gethiddenproperty, Instance.new("AnimationRigData", Instance.new("Folder")), "parent") -- * Tests how it reacts to property overlap (shadowing) due to AnimationRigData.parent; expected BinaryString
 
-			local test_str = string.rep("\1\0\0\0\1\2\3\4\5\6\7", 50)
-
-			do
-				if not bit32.byteswap or not pcall(bit32.byteswap, 1) then -- Because Fluxus is missing byteswap
-					bit32 = table.clone(bit32)
-
-					local function tobit(num)
-						num = num % (bit32.bxor(num, 32))
-						if 0x80000000 < num then
-							num = num - bit32.bxor(num, 32)
+						if o and r ~= nil and type(r) ~= "string" then
+							gethiddenproperty = nil
 						end
-						return num
 					end
-
-					bit32.byteswap = function(num)
-						local BYTE_SIZE = 8
-						local MAX_BYTE_VALUE = 255
-
-						num = num % bit32.bxor(2, 32)
-
-						local a = bit32.band(num, MAX_BYTE_VALUE)
-						num = bit32.rshift(num, BYTE_SIZE)
-
-						local b = bit32.band(num, MAX_BYTE_VALUE)
-						num = bit32.rshift(num, BYTE_SIZE)
-
-						local c = bit32.band(num, MAX_BYTE_VALUE)
-						num = bit32.rshift(num, BYTE_SIZE)
-
-						local d = bit32.band(num, MAX_BYTE_VALUE)
-						num = tobit(
-							bit32.lshift(bit32.lshift(bit32.lshift(a, BYTE_SIZE) + b, BYTE_SIZE) + c, BYTE_SIZE) + d
-						)
-						return num
+				end
+				local function benchmark(funcs, ...)
+					local ranking = table.create(2)
+					for i, f in next, funcs do
+						local start = os.clock()
+						for _ = 1, 50 do
+							f(...)
+						end
+						ranking[i] = { t = os.clock() - start, f = f }
 					end
-
-					table.freeze(bit32)
+					table.sort(ranking, function(a, b)
+						return a.t < b.t
+					end)
+					return ranking[1].f
 				end
 
-				-- Credits @daily3014 & @XoifaiI
-				local rbxcrypt_base64encode
-				pcall(function()
-					local b64_enc_buf = loadstring(
-						game:HttpGet(
-							"https://raw.githubusercontent.com/daily3014/rbx-cryptography/refs/heads/main/src/Utilities/Base64.luau",
-							true
-						),
-						"Base64"
-					)().Encode
-					rbxcrypt_base64encode = function(raw)
-						return buffer.tostring(b64_enc_buf(buffer.fromstring(raw)))
-					end
-				end)
+				local test_str = string.rep("\1\0\0\0\1\2\3\4\5\6\7", 50)
 
-				local EncodingService = game:GetService("EncodingService")
-				local EncodingService_base64encode = function(raw)
-					return buffer.tostring(EncodingService:Base64Encode(buffer.fromstring(raw)))
+				do
+					if not bit32.byteswap or not pcall(bit32.byteswap, 1) then -- Because Fluxus is missing byteswap
+						bit32 = table.clone(bit32)
+
+						local function tobit(num)
+							num = num % (bit32.bxor(num, 32))
+							if 0x80000000 < num then
+								num = num - bit32.bxor(num, 32)
+							end
+							return num
+						end
+
+						bit32.byteswap = function(num)
+							local BYTE_SIZE = 8
+							local MAX_BYTE_VALUE = 255
+
+							num = num % bit32.bxor(2, 32)
+
+							local a = bit32.band(num, MAX_BYTE_VALUE)
+							num = bit32.rshift(num, BYTE_SIZE)
+
+							local b = bit32.band(num, MAX_BYTE_VALUE)
+							num = bit32.rshift(num, BYTE_SIZE)
+
+							local c = bit32.band(num, MAX_BYTE_VALUE)
+							num = bit32.rshift(num, BYTE_SIZE)
+
+							local d = bit32.band(num, MAX_BYTE_VALUE)
+							num = tobit(
+								bit32.lshift(bit32.lshift(bit32.lshift(a, BYTE_SIZE) + b, BYTE_SIZE) + c, BYTE_SIZE) + d
+							)
+							return num
+						end
+
+						table.freeze(bit32)
+					end
+
+					-- Credits @daily3014 & @XoifaiI
+					local rbxcrypt_base64encode
+					pcall(function()
+						local b64_enc_buf = loadstring(
+							game:HttpGet(
+								"https://raw.githubusercontent.com/daily3014/rbx-cryptography/refs/heads/main/src/Utilities/Base64.luau",
+								true
+							),
+							"Base64"
+						)().Encode
+						rbxcrypt_base64encode = function(raw)
+							return buffer.tostring(b64_enc_buf(buffer.fromstring(raw)))
+						end
+					end)
+
+					local EncodingService = game:GetService("EncodingService")
+					local EncodingService_base64encode = function(raw)
+						return buffer.tostring(EncodingService:Base64Encode(buffer.fromstring(raw)))
+					end
+
+					-- * Tests if base64encode exists and works properly then benchmark it
+					if base64encode and base64encode("\1\0\0\0\1") == "AQAAAAE=" then
+						if rbxcrypt_base64encode then
+							base64encode = benchmark(
+								{ base64encode, rbxcrypt_base64encode, EncodingService_base64encode },
+								test_str
+							)
+						end
+					else
+						base64encode = rbxcrypt_base64encode
+					end
+
+					if not base64encode then
+						warn("base64encode not found")
+						Cleanup()
+						return
+					end
 				end
-
-				-- * Tests if base64encode exists and works properly then benchmark it
-				if base64encode and base64encode("\1\0\0\0\1") == "AQAAAAE=" then
-					if rbxcrypt_base64encode then
-						base64encode =
-							benchmark({ base64encode, rbxcrypt_base64encode, EncodingService_base64encode }, test_str)
-					end
+			end
+			do
+				local ok, result = pcall(FetchAPI)
+				if ok then
+					ClassList = result
 				else
-					base64encode = rbxcrypt_base64encode
-				end
-
-				if not base64encode then
-					warn("base64encode not found")
-					GLOBAL_ENV[placename] = nil
+					warn("Failed to load the API Dump")
+					warn(result)
+					Cleanup()
 					return
 				end
-			end
-		end
-
-		do
-			local ok, result = pcall(FetchAPI)
-			if ok then
-				ClassList = result
-			else
-				warn("Failed to load the API Dump")
-				warn(result)
-				GLOBAL_ENV[placename] = nil
-				return
 			end
 		end
 
@@ -4101,10 +4214,6 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		local ok, err = xpcall(save_game, function(err)
 			return debug.traceback(err)
 		end)
-
-		for _, connection in next, Connections do
-			connection:Disconnect()
-		end
 
 		if SafeMode then
 			pcall(function()
@@ -4122,7 +4231,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			gethiddenproperty = old_gethiddenproperty
 		end
 
-		GLOBAL_ENV[placename] = nil
+		Cleanup()
 
 		elapse_t = os.clock() - elapse_t
 		local Log10 = math.log10(elapse_t)
