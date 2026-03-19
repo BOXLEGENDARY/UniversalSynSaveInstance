@@ -8,7 +8,7 @@ from dump_utils import write_dump_file, get_api_response, array_to_dictionary
 BLACKLIST = {"Axes", "bool", "BrickColor", "CFrame", "Color3", "ColorSequence", "Content", "ContentId", "double", "Faces", "float", "Font", "int", "int64", "NumberRange", "NumberSequence", "PhysicalProperties", "Ray", "Rect", "string", "UDim", "UDim2", "Vector2", "Vector3"}
 
 def fetch(vh=None):
-    resp, vh = get_api_response(vh, api_version="v2")
+    resp, vh = get_api_response(vh)
     classes = resp.json()["Classes"]
     s = f"{vh}\n\n"
     hierarchy, nc_classes, c_classes, props_dict = {}, set(), set(), {}

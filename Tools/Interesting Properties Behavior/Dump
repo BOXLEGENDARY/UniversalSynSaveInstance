@@ -1,21 +1,37 @@
-version-8b02f75e5b5343a1
+version-913142fd943640d2
 
-AccessoryDescription.Instance {Uses NotScriptable Type without the tag - Instance}
+Object.className {PreferredDescriptorName: ClassName}
 
-Accoutrement.AttachmentPoint {Uses NotScriptable Type without the tag - CoordinateFrame}
+Capture.CaptureTime {CanSave Only}
+Capture.CaptureType {CanSave Only}
+Capture.FilePathString {CanSave Only}
+Capture.LocalId {CanSave Only}
+Capture.SourcePlaceId {CanSave Only}
+Capture.SourceUniverseId {CanSave Only}
 
-AlignOrientation.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
+VideoCapture.FilePath {CanSave Only}
+VideoCapture.TimeLength {CanSave Only}
+
+ConfigSnapshot.Error {CanSave Only}
+ConfigSnapshot.Outdated {CanSave Only}
+
+EditableImage.Size {CanSave Only}
+
+EditableMesh.FixedSize {CanSave Only}
+EditableMesh.SkinningEnabled {Deprecated} {CanSave}
+
+Instance.Parent {CanLoad Only}
+Instance.UniqueId {Uses NotScriptable Type without the tag - UniqueId}
+Instance.archivable {CanLoad Only} {Deprecated} {PreferredDescriptorName: Archivable}
+
+AdPortal.PortalVersion {CanSave Only}
 
 AnalyticsService.ApiKey {Deprecated} {CanSave}
 AnalyticsService is NotCreatable but AnalyticsService.ApiKey has default: ""
 
-AnimationConstraint.C0 {Uses NotScriptable Type without the tag - CoordinateFrame}
-AnimationConstraint.C1 {Uses NotScriptable Type without the tag - CoordinateFrame}
-AnimationConstraint.Part0 {Uses NotScriptable Type without the tag - BasePart}
-AnimationConstraint.Part1 {Uses NotScriptable Type without the tag - BasePart}
-AnimationConstraint.Transform {Uses NotScriptable Type without the tag - CoordinateFrame}
+AnimationClip.Length {CanSave Only}
 
-Animator.RootMotion {Uses NotScriptable Type without the tag - CoordinateFrame}
+AnimationTrack.TimePosition {CanLoad Only}
 
 AnnotationsService is NotCreatable but AnnotationsService.AnnotationsLoadingStatus has default: "Loading"
 
@@ -23,308 +39,288 @@ AssetDeliveryProxy is NotCreatable but AssetDeliveryProxy.Interface has default:
 
 AssetPatchSettings is NotCreatable but AssetPatchSettings.ContentId has default: ""
 
-Attachment.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
+Attachment.Axis {CanLoad Only}
 Attachment.Rotation {PreferredDescriptorName: Orientation}
-Attachment.WorldCFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
+Attachment.SecondaryAxis {CanLoad Only}
+Attachment.WorldAxis {CanLoad Only}
+Attachment.WorldCFrame {CanLoad Only}
 Attachment.WorldRotation {PreferredDescriptorName: WorldOrientation}
+Attachment.WorldSecondaryAxis {CanLoad Only}
+
+Bone.Transform {CanLoad Only}
+
+AudioAnalyzer.PeakLevel {CanSave Only}
+AudioAnalyzer.RmsLevel {CanSave Only}
+
+AudioCompressor.Editor {CanLoad Only}
+
+AudioDeviceInput.IsReady {CanSave Only}
 
 AudioEmitter.AngleAttenuation {Uses NotScriptable Type without the tag - BinaryString}
 AudioEmitter.DistanceAttenuation {Uses NotScriptable Type without the tag - BinaryString}
-AudioEmitter.PositionOverride {Uses NotScriptable Type without the tag - Instance}
 AudioEmitter.SimulationFidelity {Deprecated} {CanSave} {PreferredDescriptorName: AcousticSimulationEnabled}
+
+AudioEqualizer.Editor {CanLoad Only}
+
+AudioFilter.Editor {CanLoad Only}
+
+AudioLimiter.Editor {CanLoad Only}
 
 AudioListener.AngleAttenuation {Uses NotScriptable Type without the tag - BinaryString}
 AudioListener.DistanceAttenuation {Uses NotScriptable Type without the tag - BinaryString}
-AudioListener.PositionOverride {Uses NotScriptable Type without the tag - Instance}
 AudioListener.SimulationFidelity {Deprecated} {CanSave} {PreferredDescriptorName: AcousticSimulationEnabled}
 
-AudioPlayer.AssetId {PreferredDescriptorName: Asset}
+AudioPlayer.AssetId {CanLoad Only} {Deprecated} {PreferredDescriptorName: Asset}
+AudioPlayer.IsReady {CanSave Only}
+AudioPlayer.TimeLength {CanSave Only}
 
-AudioSearchParams.AudioSubtype {PreferredDescriptorName: AudioSubType}
+AudioRecorder.TimeLength {CanSave Only}
 
-AuroraScript.Source {Uses NotScriptable Type without the tag - ProtectedString}
+AudioSearchParams.AudioSubtype {CanLoad Only} {Deprecated} {PreferredDescriptorName: AudioSubType}
 
-AuroraScriptObject.BoundInstanceWeak {Uses NotScriptable Type without the tag - Instance}
+AudioSpeechToText.VoiceDetected {CanSave Only}
 
-AuroraService is NotCreatable but AuroraService.BufferFullInputCount has default: "0"
+AudioTextToSpeech.IsLoaded {CanSave Only}
+AudioTextToSpeech.TimeLength {CanSave Only}
 
 AvatarChatService is NotCreatable but AvatarChatService.ClientFeatures has default: "0"
 
 AvatarSettings is NotCreatable but AvatarSettings.Loaded has default: "false"
 
-BaseCoreGuiConfiguration is NotCreatable but BaseCoreGuiConfiguration.Enabled has default: "true"
-
-BasePart.AssemblyRootPart {Uses NotScriptable Type without the tag - BasePart}
-BasePart.BackParamA {Deprecated} {CanSave}
-BasePart.BackParamB {Deprecated} {CanSave}
-BasePart.BackSurfaceInput {Deprecated} {CanSave}
-BasePart.BottomParamA {Deprecated} {CanSave}
-BasePart.BottomParamB {Deprecated} {CanSave}
-BasePart.BottomSurfaceInput {Deprecated} {CanSave}
-BasePart.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-BasePart.CollisionGroupId {Deprecated} {CanSave} {PreferredDescriptorName: CollisionGroup}
-BasePart.ExtentsCFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-BasePart.FrontParamA {Deprecated} {CanSave}
-BasePart.FrontParamB {Deprecated} {CanSave}
-BasePart.FrontSurfaceInput {Deprecated} {CanSave}
-BasePart.LeftParamA {Deprecated} {CanSave}
-BasePart.LeftParamB {Deprecated} {CanSave}
-BasePart.LeftSurfaceInput {Deprecated} {CanSave}
-BasePart.PivotOffset {Uses NotScriptable Type without the tag - CoordinateFrame}
-BasePart.RightParamA {Deprecated} {CanSave}
-BasePart.RightParamB {Deprecated} {CanSave}
-BasePart.RightSurfaceInput {Deprecated} {CanSave}
-BasePart.RotVelocity {Deprecated} {CanSave} {PreferredDescriptorName: AssemblyAngularVelocity}
-BasePart.SpecificGravity {PreferredDescriptorName: SpecificGravity}
-BasePart.TopParamA {Deprecated} {CanSave}
-BasePart.TopParamB {Deprecated} {CanSave}
-BasePart.TopSurfaceInput {Deprecated} {CanSave}
-BasePart.Velocity {Deprecated} {CanSave} {PreferredDescriptorName: AssemblyLinearVelocity}
-BasePart.brickColor {PreferredDescriptorName: BrickColor}
-BasePart.siz {WriteOnly}
-
-BaseScript.LinkedSource {Deprecated} {CanSave}
-
-BaseWrap.CageOrigin {Uses NotScriptable Type without the tag - CoordinateFrame}
-BaseWrap.CageOriginWorld {Uses NotScriptable Type without the tag - CoordinateFrame}
-BaseWrap.ImportOrigin {Uses NotScriptable Type without the tag - CoordinateFrame}
-BaseWrap.ImportOriginWorld {Uses NotScriptable Type without the tag - CoordinateFrame}
-
-BillboardGui.Adornee {Uses NotScriptable Type without the tag - Instance}
-BillboardGui.DistanceLowerLimit {Deprecated} {CanSave}
-BillboardGui.DistanceUpperLimit {Deprecated} {CanSave}
-BillboardGui.PlayerToHideFrom {Uses NotScriptable Type without the tag - Instance}
-
-BodyAngularVelocity.angularvelocity {PreferredDescriptorName: AngularVelocity}
-BodyAngularVelocity.maxTorque {PreferredDescriptorName: MaxTorque}
-
-BodyForce.force {PreferredDescriptorName: Force}
-
-BodyGyro.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-BodyGyro.cframe {Uses NotScriptable Type without the tag - CoordinateFrame} {PreferredDescriptorName: CFrame}
-BodyGyro.maxTorque {PreferredDescriptorName: MaxTorque}
-
-BodyPartDescription.Instance {Uses NotScriptable Type without the tag - Instance}
-
-BodyPosition.maxForce {PreferredDescriptorName: MaxForce}
-BodyPosition.position {PreferredDescriptorName: Position}
-
-BodyThrust.force {PreferredDescriptorName: Force}
-BodyThrust.location {PreferredDescriptorName: Location}
-
-BodyVelocity.maxForce {PreferredDescriptorName: MaxForce}
-BodyVelocity.velocity {PreferredDescriptorName: Velocity}
-
-Bone.Transform {Uses NotScriptable Type without the tag - CoordinateFrame}
-Bone.TransformedCFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-Bone.TransformedWorldCFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-
-BubbleChatConfiguration is NotCreatable but BubbleChatConfiguration.AdorneeName has default: "HumanoidRootPart"
-
-CFrameValue.Value {Uses NotScriptable Type without the tag - CoordinateFrame}
-
-Camera.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-Camera.CameraSubject {Uses NotScriptable Type without the tag - Instance}
-Camera.CoordinateFrame {Uses NotScriptable Type without the tag - CoordinateFrame} {PreferredDescriptorName: CFrame}
-Camera.Focus {Uses NotScriptable Type without the tag - CoordinateFrame}
-Camera.focus {Uses NotScriptable Type without the tag - CoordinateFrame} {PreferredDescriptorName: Focus}
-
 CapturesViewConfiguration is NotCreatable but CapturesViewConfiguration.Open has default: "false"
 
-ChannelSelectorSoundEffect is NotCreatable but ChannelSelectorSoundEffect.Channel has default: "1"
+PlayerListConfiguration is NotCreatable but PlayerListConfiguration.Open has default: "true"
 
-ChannelTabsConfiguration is NotCreatable but ChannelTabsConfiguration.AbsolutePosition has default: "0, 0"
+SelfViewConfiguration is NotCreatable but SelfViewConfiguration.Open has default: "false"
+
+BaseImportData.Id {CanSave Only}
+
+MaterialImportData.IsPbr {CanSave Only}
+
+MeshImportData.CageManifold {CanSave Only}
+MeshImportData.CageMeshNotIntersected {CanSave Only}
+MeshImportData.CageNoOverlappingVertices {CanSave Only}
+MeshImportData.CageUVMatched {CanSave Only}
+MeshImportData.Dimensions {CanSave Only}
+MeshImportData.MeshNoHoleDetected {CanSave Only}
+MeshImportData.NoIrrelevantCageModified {CanSave Only}
+MeshImportData.NoOuterCageFarExtendedFromMesh {CanSave Only}
+MeshImportData.PolygonCount {CanSave Only}
+
+RootImportData.FileDimensions {CanSave Only}
+RootImportData.PolygonCount {CanSave Only}
+
+CoreGui.Version {CanSave Only}
+
+PlayerGui is NotCreatable but PlayerGui.CurrentScreenOrientation has default: "LandscapeLeft"
+
+StarterGui.ResetPlayerGuiOnSpawn {Deprecated} {CanSave}
+
+BodyAngularVelocity.angularvelocity {CanLoad Only} {Deprecated} {PreferredDescriptorName: AngularVelocity}
+BodyAngularVelocity.maxTorque {CanLoad Only} {Deprecated} {PreferredDescriptorName: MaxTorque}
+
+BodyForce.force {CanLoad Only} {Deprecated} {PreferredDescriptorName: Force}
+
+BodyGyro.cframe {CanLoad Only} {Deprecated} {PreferredDescriptorName: CFrame}
+BodyGyro.maxTorque {CanLoad Only} {Deprecated} {PreferredDescriptorName: MaxTorque}
+
+BodyPosition.maxForce {CanLoad Only} {Deprecated} {PreferredDescriptorName: MaxForce}
+BodyPosition.position {CanLoad Only} {Deprecated} {PreferredDescriptorName: Position}
+
+BodyThrust.force {CanLoad Only} {Deprecated} {PreferredDescriptorName: Force}
+BodyThrust.location {CanLoad Only} {Deprecated} {PreferredDescriptorName: Location}
+
+BodyVelocity.maxForce {CanLoad Only} {Deprecated} {PreferredDescriptorName: MaxForce}
+BodyVelocity.velocity {CanLoad Only} {Deprecated} {PreferredDescriptorName: Velocity}
+
+BodyColors.HeadColor {CanLoad Only}
+BodyColors.LeftArmColor {CanLoad Only}
+BodyColors.LeftLegColor {CanLoad Only}
+BodyColors.RightArmColor {CanLoad Only}
+BodyColors.RightLegColor {CanLoad Only}
+BodyColors.TorsoColor {CanLoad Only}
+
+Clothing.Outfit1 {CanLoad Only}
+Clothing.Outfit2 {CanLoad Only}
 
 Chat is NotCreatable but Chat.BubbleChatEnabled has default: "false"
 
-ChatInputBarConfiguration is NotCreatable but ChatInputBarConfiguration.AbsolutePosition has default: "0, 0"
+DragDetector.Axis {CanLoad Only}
+DragDetector.SecondaryAxis {CanLoad Only}
+DragDetector.WorldAxis {CanLoad Only}
+DragDetector.WorldSecondaryAxis {CanLoad Only}
 
-ChatWindowConfiguration is NotCreatable but ChatWindowConfiguration.AbsolutePosition has default: "0, 0"
-
-ChatWindowMessageProperties is NotCreatable but ChatWindowMessageProperties.PrefixTextProperties has default: "nullptr"
-
-Collaborator.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
 Collaborator.CollaboratorColor {PreferredDescriptorName: CollaboratorColor3}
 Collaborator is NotCreatable but Collaborator.CFrame has default: "0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1"
 
-CompressorSoundEffect.SideChain {Uses NotScriptable Type without the tag - Instance}
-
+ConnectivityService.NetworkStatus {CanSave Only}
 ConnectivityService is NotCreatable but ConnectivityService.NetworkStatus has default: "Unknown"
 
-ControllerManager.RootPart {Uses NotScriptable Type without the tag - BasePart}
+HingeConstraint.CurrentAngle {CanSave Only}
+HingeConstraint.SoftlockServoUponReachingTarget {Deprecated} {CanSave}
 
-ControllerPartSensor.HitFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-ControllerPartSensor.SensedPart {Uses NotScriptable Type without the tag - BasePart}
+RodConstraint.CurrentDistance {CanSave Only}
 
-CoreGui is NotCreatable but CoreGui.SelectionImageObject has default: "nullptr"
+RopeConstraint.CurrentDistance {CanSave Only}
 
-CoreGuiConfiguration is NotCreatable but CoreGuiConfiguration.CapturesViewConfiguration has default: "nullptr"
+SlidingBallConstraint.CurrentPosition {CanSave Only}
+SlidingBallConstraint.SoftlockServoUponReachingTarget {Deprecated} {CanSave}
 
-CustomEventReceiver.Source {Uses NotScriptable Type without the tag - Instance}
-
+CylindricalConstraint.CurrentAngle {CanSave Only}
 CylindricalConstraint.SoftlockAngularServoUponReachingTarget {Deprecated} {CanSave}
+CylindricalConstraint.WorldRotationAxis {CanSave Only}
 
-DataModel.VIPServerId {Deprecated} {CanSave} {PreferredDescriptorName: PrivateServerId}
-DataModel.VIPServerOwnerId {Deprecated} {CanSave} {PreferredDescriptorName: PrivateServerOwnerId}
-DataModel.lighting {Uses NotScriptable Type without the tag - Instance}
-DataModel.workspace {PreferredDescriptorName: Workspace}
+SpringConstraint.CurrentLength {CanSave Only}
 
-DataStoreKey is NotCreatable but DataStoreKey.KeyName has default: ""
+TorsionSpringConstraint.CurrentAngle {CanSave Only}
+TorsionSpringConstraint.LimitEnabled {Deprecated} {CanSave} {PreferredDescriptorName: LimitsEnabled}
+
+ContentProvider.BaseUrl {CanSave Only}
+ContentProvider.RequestQueueSize {CanSave Only}
+
+DataStoreInfo.CreatedTime {CanSave Only}
+DataStoreInfo.DataStoreName {CanSave Only}
+DataStoreInfo.UpdatedTime {CanSave Only}
+
+DataStoreKey.KeyName {CanSave Only}
+
+DataStoreKeyInfo.CreatedTime {CanSave Only}
+DataStoreKeyInfo.UpdatedTime {CanSave Only}
+DataStoreKeyInfo.Version {CanSave Only}
+
+DataStoreObjectVersionInfo.CreatedTime {CanSave Only}
+DataStoreObjectVersionInfo.IsDeleted {CanSave Only}
+DataStoreObjectVersionInfo.Version {CanSave Only}
 
 DataStoreService.LegacyNamingScheme {Deprecated} {CanSave}
 DataStoreService is NotCreatable but DataStoreService.AutomaticRetry has default: "true"
 
-DebugSettings is NotCreatable but DebugSettings.DataModel has default: "1"
+Debris.MaxItems {Deprecated} {CanSave}
 
-DebuggerBreakpoint is NotCreatable but DebuggerBreakpoint.Condition has default: ""
+DebugSettings.DataModel {CanSave Only}
+DebugSettings.InstanceCount {CanSave Only}
+DebugSettings.JobCount {CanSave Only}
+DebugSettings.PlayerCount {CanSave Only}
+DebugSettings.RobloxVersion {CanSave Only}
 
-DebuggerConnectionManager is NotCreatable but DebuggerConnectionManager.Timeout has default: "10"
-
-DebuggerManager is NotCreatable but DebuggerManager.DebuggingEnabled has default: "false"
-
-DigitsRigDescription.Index1 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Index1TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Index2 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Index2TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Index3 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Index3TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Middle1 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Middle1TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Middle2 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Middle2TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Middle3 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Middle3TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Pinky1 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Pinky1TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Pinky2 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Pinky2TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Pinky3 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Pinky3TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Ring1 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Ring1TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Ring2 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Ring2TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Ring3 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Ring3TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Thumb1 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Thumb1TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Thumb2 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Thumb2TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-DigitsRigDescription.Thumb3 {Uses NotScriptable Type without the tag - Instance}
-DigitsRigDescription.Thumb3TposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-
-DockWidgetPluginGui is NotCreatable but DockWidgetPluginGui.HostWidgetWasRestored has default: "false"
-
-DragDetector.DragFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-DragDetector.ReferenceInstance {Uses NotScriptable Type without the tag - Instance}
-
-EditableMesh.SkinningEnabled {Deprecated} {CanSave}
+DebuggerManager.DebuggingEnabled {CanSave Only}
 
 EditableService is NotCreatable but EditableService.EditableStatus has default: "Unknown"
 
 ExperienceStateCaptureService is NotCreatable but ExperienceStateCaptureService.HiddenSelectionEnabled has default: "false"
 
+ExplorerFilterAutocompleter.ReplaceRange {CanSave Only}
+ExplorerFilterAutocompleter.RequiresOutsideContext {CanSave Only}
+
 FaceAnimatorService is NotCreatable but FaceAnimatorService.AudioAnimationEnabled has default: "true"
 
-FacialAnimationRecordingService is NotCreatable but FacialAnimationRecordingService.BiometricDataConsent has default: "false"
+Decal.Shiny {CanLoad Only} {Deprecated}
+Decal.Specular {CanLoad Only} {Deprecated}
 
 FacialAnimationStreamingServiceV2 is NotCreatable but FacialAnimationStreamingServiceV2.ServiceState has default: "0"
 
-File is NotCreatable but File.Size has default: "0"
+Fire.Heat {CanLoad Only}
+Fire.Size {CanLoad Only}
+Fire.size {CanLoad Only} {Deprecated} {PreferredDescriptorName: Size}
 
-Fire.size {PreferredDescriptorName: Size}
+FloatCurve.Length {CanSave Only}
 
-FloorWire.From {Uses NotScriptable Type without the tag - BasePart}
-FloorWire.To {Uses NotScriptable Type without the tag - BasePart}
+FunctionalTest.AllowSleep {CanLoad Only}
+FunctionalTest.Is30FpsThrottleEnabled {CanLoad Only}
+FunctionalTest.PhysicsEnvironmentalThrottle {CanLoad Only}
+FunctionalTest.Timeout {CanLoad Only}
 
 GameSettings.VideoCaptureEnabled {Deprecated} {CanSave}
-GameSettings is NotCreatable but GameSettings.VideoCaptureEnabled has default: "true"
 
 GamepadService is NotCreatable but GamepadService.GamepadCursorEnabled has default: "false"
 
-GuiBase2d.Localize {PreferredDescriptorName: AutoLocalize}
+GuiBase2d.Localize {CanLoad Only} {Deprecated} {PreferredDescriptorName: AutoLocalize}
 
-GuiBase3d.Color {PreferredDescriptorName: Color3}
-
+GuiObject.BackgroundColor {CanLoad Only} {Deprecated}
+GuiObject.BorderColor {CanLoad Only} {Deprecated}
 GuiObject.Draggable {Deprecated} {CanSave}
+GuiObject.GuiState {CanSave Only}
+GuiObject.Transparency {CanLoad Only}
 
-GuiService is NotCreatable but GuiService.AutoSelectGuiEnabled has default: "true"
+TextButton.Font {CanLoad Only}
+TextButton.FontSize {CanLoad Only} {Deprecated} {PreferredDescriptorName: TextSize}
+TextButton.LocalizedText {CanSave Only}
+TextButton.OpenTypeFeaturesError {CanSave Only}
+TextButton.TextColor {CanLoad Only} {Deprecated}
+TextButton.TextWrap {CanLoad Only} {Deprecated} {PreferredDescriptorName: TextWrapped}
 
-HandleAdornment.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-HandleAdornment.GizmoReference {Uses NotScriptable Type without the tag - Instance}
+TextLabel.Font {CanLoad Only}
+TextLabel.FontSize {CanLoad Only} {Deprecated} {PreferredDescriptorName: TextSize}
+TextLabel.LocalizedText {CanSave Only}
+TextLabel.OpenTypeFeaturesError {CanSave Only}
+TextLabel.TextColor {CanLoad Only} {Deprecated}
+TextLabel.TextWrap {CanLoad Only} {Deprecated} {PreferredDescriptorName: TextWrapped}
+
+ScrollingFrame.AbsoluteCanvasSize {CanSave Only}
+ScrollingFrame.AbsoluteWindowSize {CanSave Only}
+
+TextBox.Font {CanLoad Only}
+TextBox.FontSize {CanLoad Only} {Deprecated} {PreferredDescriptorName: TextSize}
+TextBox.OpenTypeFeaturesError {CanSave Only}
+TextBox.TextColor {CanLoad Only} {Deprecated}
+TextBox.TextWrap {CanLoad Only} {Deprecated} {PreferredDescriptorName: TextWrapped}
+
+ViewportFrame.CurrentCamera {CanLoad Only}
+
+BillboardGui.DistanceLowerLimit {Deprecated} {CanSave}
+BillboardGui.DistanceStep {CanLoad Only}
+BillboardGui.DistanceUpperLimit {Deprecated} {CanSave}
+
+DockWidgetPluginGui.HostWidgetWasRestored {CanSave Only}
+DockWidgetPluginGui is NotCreatable but DockWidgetPluginGui.HostWidgetWasRestored has default: "false"
+
+ScreenGui.IgnoreGuiInset {CanLoad Only}
+
+GuiBase3d.Color {CanLoad Only} {Deprecated} {PreferredDescriptorName: Color3}
+
+SelectionBox.SurfaceColor {CanLoad Only} {Deprecated} {PreferredDescriptorName: SurfaceColor3}
+
+SelectionSphere.SurfaceColor {CanLoad Only} {Deprecated} {PreferredDescriptorName: SurfaceColor3}
+
+Path2D.SelectedControlPoint {CanLoad Only}
+Path2D.SelectedControlPointData {CanLoad Only}
+
+GuiService.MenuIsOpen {CanSave Only}
 
 HapticEffect.Waveform {Deprecated} {CanSave}
-
-Highlight.Adornee {Uses NotScriptable Type without the tag - Instance}
-
-HingeConstraint.SoftlockServoUponReachingTarget {Deprecated} {CanSave}
-
-HopperBin.Command {WriteOnly}
-HopperBin.TextureName {WriteOnly}
 
 HttpService is NotCreatable but HttpService.HttpEnabled has default: "false"
 
 Humanoid.CollisionType {Deprecated} {CanSave}
-Humanoid.LeftLeg {Uses NotScriptable Type without the tag - BasePart}
-Humanoid.RightLeg {Uses NotScriptable Type without the tag - BasePart}
-Humanoid.RootPart {Uses NotScriptable Type without the tag - BasePart}
-Humanoid.SeatPart {Uses NotScriptable Type without the tag - BasePart}
-Humanoid.Torso {Uses NotScriptable Type without the tag - BasePart}
-Humanoid.WalkToPart {Uses NotScriptable Type without the tag - BasePart}
-Humanoid.maxHealth {PreferredDescriptorName: MaxHealth}
+Humanoid.Health {CanLoad Only}
+Humanoid.Jump {CanLoad Only}
+Humanoid.LeftLeg {CanLoad Only} {Deprecated}
+Humanoid.RightLeg {CanLoad Only} {Deprecated}
+Humanoid.RootPart {CanSave Only}
+Humanoid.Torso {CanLoad Only} {Deprecated}
+Humanoid.maxHealth {CanLoad Only} {Deprecated} {PreferredDescriptorName: MaxHealth}
 
-HumanoidRigDescription.Chest {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.ChestTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.HeadBase {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.HeadBaseTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftAnkle {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftAnkleTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftClavicle {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftClavicleTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftElbow {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftElbowTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftHip {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftHipTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftKnee {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftKneeTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftShoulder {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftShoulderTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftToeBase {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftToeBaseTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.LeftWrist {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.LeftWristTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.Neck {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.NeckTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.OriginOffset {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightAnkle {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightAnkleTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightClavicle {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightClavicleTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightElbow {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightElbowTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightHip {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightHipTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightKnee {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightKneeTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightShoulder {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightShoulderTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightToeBase {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightToeBaseTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.RightWrist {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RightWristTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.Root {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.RootTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.Spine {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.SpineTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-HumanoidRigDescription.Waist {Uses NotScriptable Type without the tag - Instance}
-HumanoidRigDescription.WaistTposeAdjustment {Uses NotScriptable Type without the tag - CoordinateFrame}
-
-IKControl.ChainRoot {Uses NotScriptable Type without the tag - Instance}
-IKControl.EndEffector {Uses NotScriptable Type without the tag - Instance}
-IKControl.EndEffectorOffset {Uses NotScriptable Type without the tag - CoordinateFrame}
-IKControl.Offset {Uses NotScriptable Type without the tag - CoordinateFrame}
-IKControl.Pole {Uses NotScriptable Type without the tag - Instance}
-IKControl.Target {Uses NotScriptable Type without the tag - Instance}
+HumanoidDescription.AccessoryBlob {CanLoad Only}
+HumanoidDescription.BackAccessory {CanLoad Only}
+HumanoidDescription.FaceAccessory {CanLoad Only}
+HumanoidDescription.FrontAccessory {CanLoad Only}
+HumanoidDescription.HairAccessory {CanLoad Only}
+HumanoidDescription.HatAccessory {CanLoad Only}
+HumanoidDescription.Head {CanLoad Only}
+HumanoidDescription.HeadColor {CanLoad Only}
+HumanoidDescription.LeftArm {CanLoad Only}
+HumanoidDescription.LeftArmColor {CanLoad Only}
+HumanoidDescription.LeftLeg {CanLoad Only}
+HumanoidDescription.LeftLegColor {CanLoad Only}
+HumanoidDescription.NeckAccessory {CanLoad Only}
+HumanoidDescription.RightArm {CanLoad Only}
+HumanoidDescription.RightArmColor {CanLoad Only}
+HumanoidDescription.RightLeg {CanLoad Only}
+HumanoidDescription.RightLegColor {CanLoad Only}
+HumanoidDescription.ShouldersAccessory {CanLoad Only}
+HumanoidDescription.Torso {CanLoad Only}
+HumanoidDescription.TorsoColor {CanLoad Only}
+HumanoidDescription.WaistAccessory {CanLoad Only}
 
 IncrementalPatchBuilder is NotCreatable but IncrementalPatchBuilder.AddPathsToBundle has default: "false"
 
@@ -333,95 +329,168 @@ InputObject is NotCreatable but InputObject.Delta has default: "0, 0, 0"
 InsertService.AllowInsertFreeModels {Deprecated} {CanSave}
 InsertService is NotCreatable but InsertService.AllowClientInsertModels has default: "false"
 
-Instance.Parent {Uses NotScriptable Type without the tag - Instance}
-Instance.UniqueId {Uses NotScriptable Type without the tag - UniqueId}
-Instance.archivable {PreferredDescriptorName: Archivable}
+InternalSyncItem.Target {CanLoad Only}
 
-InstanceAdornment.Adornee {Uses NotScriptable Type without the tag - Instance}
+JointInstance.part1 {PreferredDescriptorName: Part1}
 
-InternalSyncItem.Target {Uses NotScriptable Type without the tag - Instance}
+Motor.CurrentAngle {CanLoad Only}
 
-JointInstance.C0 {Uses NotScriptable Type without the tag - CoordinateFrame}
-JointInstance.C1 {Uses NotScriptable Type without the tag - CoordinateFrame}
-JointInstance.Part0 {Uses NotScriptable Type without the tag - BasePart}
-JointInstance.Part1 {Uses NotScriptable Type without the tag - BasePart}
-JointInstance.part1 {Uses NotScriptable Type without the tag - BasePart} {PreferredDescriptorName: Part1}
-
+Lighting.ClockTime {CanLoad Only}
 Lighting.Outlines {Deprecated} {CanSave}
+Lighting.ShadowColor {CanLoad Only} {Deprecated}
 Lighting is NotCreatable but Lighting.Ambient has default: "0.5, 0.5, 0.5"
 
 LiveScriptingService is NotCreatable but LiveScriptingService.ServerLiveEditingMode has default: "Uninitialized"
 
+LiveSyncService.HasSyncedInstances {CanSave Only}
 LiveSyncService is NotCreatable but LiveSyncService.HasSyncedInstances has default: "false"
 
 LocalizationService is NotCreatable but LocalizationService.ForcePlayModeGameLocaleId has default: ""
 
-LocalizationTable.DevelopmentLanguage {PreferredDescriptorName: SourceLocaleId}
-LocalizationTable.Root {Uses NotScriptable Type without the tag - Instance} {PreferredDescriptorName: RootLocalizationTable (NOT FOUND)}
+LocalizationTable.DevelopmentLanguage {CanLoad Only} {Deprecated} {PreferredDescriptorName: SourceLocaleId}
+LocalizationTable.Root {PreferredDescriptorName: RootLocalizationTable (NOT FOUND)}
 
 LodDataEntity is NotCreatable but LodDataEntity.EntityLodEnabled has default: "true"
 
-MakeupDescription.Instance {Uses NotScriptable Type without the tag - Instance}
+AuroraScript.Source {Uses NotScriptable Type without the tag - ProtectedString}
+
+BaseScript.LinkedSource {Deprecated} {CanSave}
+
+Script.Source {Uses NotScriptable Type without the tag - ProtectedString}
+
+ModuleScript.LinkedSource {Deprecated} {CanSave}
+ModuleScript.Source {Uses NotScriptable Type without the tag - ProtectedString}
+
+MarkerCurve.Length {CanSave Only}
 
 MaterialService is NotCreatable but MaterialService.AsphaltName has default: "Asphalt"
 
-MeshPart.HasJointOffset {Deprecated} {CanSave}
-MeshPart.JointOffset {Deprecated} {CanSave}
-MeshPart.MeshID {PreferredDescriptorName: MeshId}
-
+MetaBreakpoint.Id {CanSave Only}
+MetaBreakpoint.IsLogpoint {CanSave Only}
+MetaBreakpoint.Valid {CanSave Only}
 MetaBreakpoint is NotCreatable but MetaBreakpoint.Condition has default: ""
 
 MetaBreakpointContext is NotCreatable but MetaBreakpointContext.ContextDataInternal has default: "0 1 2 "
 
 MicroProfilerService is NotCreatable but MicroProfilerService.ContextLabel has default: ""
 
-Model.PrimaryPart {Uses NotScriptable Type without the tag - BasePart}
-Model.WorldPivot {Uses NotScriptable Type without the tag - CoordinateFrame}
+Mouse.Hit {CanSave Only}
+Mouse.Origin {CanSave Only}
+Mouse.Target {CanSave Only}
+Mouse.TargetSurface {CanSave Only}
+Mouse.UnitRay {CanSave Only}
+Mouse.ViewSizeX {CanSave Only}
+Mouse.ViewSizeY {CanSave Only}
+Mouse.X {CanSave Only}
+Mouse.Y {CanSave Only}
+Mouse.hit {PreferredDescriptorName: Hit}
+Mouse.target {PreferredDescriptorName: Target}
 
-ModuleScript.LinkedSource {Deprecated} {CanSave}
-ModuleScript.Source {Uses NotScriptable Type without the tag - ProtectedString}
+NotificationService.SelectedTheme {CanLoad Only}
 
-Motor6D.Transform {Uses NotScriptable Type without the tag - CoordinateFrame}
+BasePart.AssemblyAngularVelocity {CanLoad Only}
+BasePart.AssemblyLinearVelocity {CanLoad Only}
+BasePart.BackParamA {Deprecated} {CanSave}
+BasePart.BackParamB {Deprecated} {CanSave}
+BasePart.BackSurfaceInput {Deprecated} {CanSave}
+BasePart.BottomParamA {Deprecated} {CanSave}
+BasePart.BottomParamB {Deprecated} {CanSave}
+BasePart.BottomSurfaceInput {Deprecated} {CanSave}
+BasePart.BrickColor {CanLoad Only}
+BasePart.CollisionGroupId {Deprecated} {CanSave} {PreferredDescriptorName: CollisionGroup}
+BasePart.Color {CanLoad Only}
+BasePart.Elasticity {CanLoad Only} {Deprecated}
+BasePart.Friction {CanLoad Only} {Deprecated}
+BasePart.FrontParamA {Deprecated} {CanSave}
+BasePart.FrontParamB {Deprecated} {CanSave}
+BasePart.FrontSurfaceInput {Deprecated} {CanSave}
+BasePart.LeftParamA {Deprecated} {CanSave}
+BasePart.LeftParamB {Deprecated} {CanSave}
+BasePart.LeftSurfaceInput {Deprecated} {CanSave}
+BasePart.RightParamA {Deprecated} {CanSave}
+BasePart.RightParamB {Deprecated} {CanSave}
+BasePart.RightSurfaceInput {Deprecated} {CanSave}
+BasePart.RotVelocity {Deprecated} {CanSave} {PreferredDescriptorName: AssemblyAngularVelocity}
+BasePart.Rotation {CanLoad Only}
+BasePart.Size {CanLoad Only}
+BasePart.SpecificGravity {PreferredDescriptorName: SpecificGravity}
+BasePart.TopParamA {Deprecated} {CanSave}
+BasePart.TopParamB {Deprecated} {CanSave}
+BasePart.TopSurfaceInput {Deprecated} {CanSave}
+BasePart.Velocity {Deprecated} {CanSave} {PreferredDescriptorName: AssemblyLinearVelocity}
+BasePart.brickColor {CanLoad Only} {Deprecated} {PreferredDescriptorName: BrickColor}
+BasePart.siz {WriteOnly} {CanLoad Only}
 
-Mouse.Hit {Uses NotScriptable Type without the tag - CoordinateFrame}
-Mouse.Origin {Uses NotScriptable Type without the tag - CoordinateFrame}
-Mouse.Target {Uses NotScriptable Type without the tag - BasePart}
-Mouse.TargetFilter {Uses NotScriptable Type without the tag - Instance}
-Mouse.hit {Uses NotScriptable Type without the tag - CoordinateFrame} {PreferredDescriptorName: Hit}
-Mouse.target {Uses NotScriptable Type without the tag - BasePart} {PreferredDescriptorName: Target}
+FormFactorPart.FormFactor {CanLoad Only} {Deprecated}
+FormFactorPart.formFactor {CanLoad Only} {Deprecated}
 
-NetworkSettings is NotCreatable but NetworkSettings.EmulatedTotalMemoryInMB has default: "112639"
+Part.Shape {CanLoad Only}
+Part.shap {WriteOnly} {CanLoad Only}
 
-NoCollisionConstraint.Part0 {Uses NotScriptable Type without the tag - BasePart}
-NoCollisionConstraint.Part1 {Uses NotScriptable Type without the tag - BasePart}
+Terrain.ClusterGrid {WriteOnly} {CanLoad Only}
+Terrain.ClusterGridV2 {WriteOnly} {CanLoad Only}
+Terrain.ClusterGridV3 {WriteOnly} {CanLoad Only}
+Terrain is NotCreatable but Terrain.AcquisitionMethod has default: "None"
 
-NotificationService is NotCreatable but NotificationService.IsConnected has default: "false"
+TriangleMeshPart.CollisionFidelity {CanLoad Only}
+TriangleMeshPart.FluidFidelity {CanLoad Only}
 
-Object.className {PreferredDescriptorName: ClassName}
+MeshPart.HasJointOffset {Deprecated} {CanSave}
+MeshPart.JointOffset {Deprecated} {CanSave}
+MeshPart.MeshID {CanLoad Only} {Deprecated} {PreferredDescriptorName: MeshId}
 
-ObjectValue.Value {Uses NotScriptable Type without the tag - Instance}
+PartOperation.TriangleCount {CanSave Only}
 
+TrussPart.Style {CanLoad Only}
+
+Camera.CoordinateFrame {CanLoad Only} {Deprecated} {PreferredDescriptorName: CFrame}
+Camera.NearPlaneZ {CanSave Only}
+Camera.ViewportSize {CanSave Only}
+Camera.focus {CanLoad Only} {Deprecated} {PreferredDescriptorName: Focus}
+
+HopperBin.Command {WriteOnly} {CanLoad Only}
+HopperBin.TextureName {WriteOnly} {CanLoad Only}
+
+Workspace.CollisionGroups {WriteOnly} {CanLoad Only}
+Workspace.StreamingPauseMode {CanLoad Only}
+
+PackageLink.PackageId {CanSave Only}
 PackageLink.SerializedDefaultAttributes {Uses NotScriptable Type without the tag - BinaryString}
+PackageLink.VersionNumber {CanLoad Only}
 PackageLink is NotCreatable but PackageLink.AutoUpdate has default: "false"
 
-Part.shap {WriteOnly}
+DataStoreKeyPages.Cursor {CanSave Only}
 
-PartAdornment.Adornee {Uses NotScriptable Type without the tag - BasePart}
+DataStoreListingPages.Cursor {CanSave Only}
 
-ParticleEmitter.VelocitySpread {PreferredDescriptorName: SpreadAngle}
+ParticleEmitter.VelocitySpread {CanLoad Only} {Deprecated} {PreferredDescriptorName: SpreadAngle}
 
 PatchMapping is NotCreatable but PatchMapping.FlattenTree has default: "false"
 
+Path.Status {CanSave Only}
+
+PathfindingService.EmptyCutoff {CanLoad Only} {Deprecated}
 PathfindingService is NotCreatable but PathfindingService.EmptyCutoff has default: "0"
 
-PhysicsSettings is NotCreatable but PhysicsSettings.AllowSleep has default: "true"
-
 Player.CharacterAppearance {Deprecated} {CanSave} {PreferredDescriptorName: CharacterAppearanceId}
-Player.ReplicationFocus {Uses NotScriptable Type without the tag - Instance}
+Player.FollowUserId {CanSave Only}
+Player.ThirdPartyTextChatRestrictionStatus {CanSave Only}
 Player.userId {PreferredDescriptorName: UserId}
 
+PlayerDataRecord.CreatedTime {CanSave Only}
+PlayerDataRecord.DefaultRecordName {CanSave Only}
+PlayerDataRecord.Dirty {CanSave Only}
+PlayerDataRecord.Error {CanSave Only}
+PlayerDataRecord.FlushedTime {CanSave Only}
+PlayerDataRecord.LoadedTime {CanSave Only}
+PlayerDataRecord.ModifiedTime {CanSave Only}
+PlayerDataRecord.NewRecord {CanSave Only}
+PlayerDataRecord.Readable {CanSave Only}
+PlayerDataRecord.RecordName {CanSave Only}
+PlayerDataRecord.Writable {CanSave Only}
 PlayerDataRecord is NotCreatable but PlayerDataRecord.CreatedTime has default: "0"
 
+PlayerDataRecordConfig.RecordName {CanSave Only}
 PlayerDataRecordConfig is NotCreatable but PlayerDataRecordConfig.RecordName has default: ""
 
 PlayerDataService is NotCreatable but PlayerDataService.LoadFailureBehavior has default: "Failure"
@@ -429,196 +498,238 @@ PlayerDataService is NotCreatable but PlayerDataService.LoadFailureBehavior has 
 PlayerEmulatorService.SerializedEmulatedPolicyInfo {Uses NotScriptable Type without the tag - BinaryString}
 PlayerEmulatorService is NotCreatable but PlayerEmulatorService.CustomPoliciesEnabled has default: "false"
 
-PlayerGui is NotCreatable but PlayerGui.CurrentScreenOrientation has default: "LandscapeLeft"
-
-PlayerListConfiguration is NotCreatable but PlayerListConfiguration.Open has default: "true"
-
 Players.NumPlayers {PreferredDescriptorName: GetPlayers (NOT FOUND)}
 Players.localPlayer {PreferredDescriptorName: LocalPlayer}
 Players.numPlayers {PreferredDescriptorName: NumPlayers}
 
-PluginDragEvent is NotCreatable but PluginDragEvent.Data has default: ""
+PluginAction.Text {CanLoad Only}
 
-PluginGui is NotCreatable but PluginGui.Plugin has default: "nullptr"
+PluginMenu.Icon {CanLoad Only}
+PluginMenu.Title {CanLoad Only}
+
+PluginToolbarButton.ClickableWhenViewportHidden {CanLoad Only}
+PluginToolbarButton.Enabled {CanLoad Only}
+PluginToolbarButton.Icon {CanLoad Only}
 
 PolicyService is NotCreatable but PolicyService.IsLuobuServer has default: "Unknown"
 
-Pose.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
+Pose.MaskWeight {CanLoad Only} {Deprecated}
 
-RenderSettings is NotCreatable but RenderSettings.AutoFRMLevel has default: "1"
-
-RenderingTest.CFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
+RenderSettings.EnableFRM {CanLoad Only}
 
 RobloxSerializableInstance.Data {Uses NotScriptable Type without the tag - BinaryString}
-
-RocketPropulsion.Target {Uses NotScriptable Type without the tag - BasePart}
+RobloxSerializableInstance is NotCreatable but RobloxSerializableInstance.Data has default: ""
 
 RolloutValidation is NotCreatable but RolloutValidation.AdditionalFluffOne has default: "0"
+
+RotationCurve.Length {CanSave Only}
 
 SafetyService is NotCreatable but SafetyService.IsCaptureModeForReport has default: "false"
 
 ScreenshotHud.ExperienceNameOverlayEnabled {Deprecated} {CanSave}
 ScreenshotHud.OverlayFont {Deprecated} {CanSave}
 ScreenshotHud.UsernameOverlayEnabled {Deprecated} {CanSave}
-ScreenshotHud is NotCreatable but ScreenshotHud.CameraButtonIcon has default: ""
 
-Script.Source {Uses NotScriptable Type without the tag - ProtectedString}
+SyncScriptBuilder.RawBytecode {Deprecated} {CanSave} {PreferredDescriptorName: CompileTarget}
+SyncScriptBuilder is NotCreatable but SyncScriptBuilder.CompileTarget has default: "CoreScript"
 
 ScriptContext is NotCreatable but ScriptContext.ScriptsDisabled has default: "false"
 
-ScriptDebugger.Script {Uses NotScriptable Type without the tag - Instance}
 ScriptDebugger is NotCreatable but ScriptDebugger.CoreScriptIdentifier has default: ""
 
-Selection.ActiveInstance {Uses NotScriptable Type without the tag - Instance}
+Selection.SelectionBoxThickness {CanSave Only}
+Selection.SelectionLineThickness {CanSave Only}
 
-SelectionBox.SurfaceColor {PreferredDescriptorName: SurfaceColor3}
+AtmosphereSensor.AirDensity {CanSave Only}
+AtmosphereSensor.RelativeWindVelocity {CanSave Only}
 
-SelectionPartLasso.Part {Uses NotScriptable Type without the tag - BasePart}
-
-SelectionSphere.SurfaceColor {PreferredDescriptorName: SurfaceColor3}
-
-SelfViewConfiguration is NotCreatable but SelfViewConfiguration.Open has default: "false"
+FluidForceSensor.CenterOfPressure {CanSave Only}
+FluidForceSensor.Force {CanSave Only}
+FluidForceSensor.Torque {CanSave Only}
 
 ServerScriptService is NotCreatable but ServerScriptService.LoadStringEnabled has default: "false"
 
+DataModel.MatchmakingType {CanSave Only}
+DataModel.PrivateServerId {CanSave Only}
+DataModel.PrivateServerOwnerId {CanSave Only}
+DataModel.VIPServerId {CanSave Only} {Deprecated} {CanSave} {PreferredDescriptorName: PrivateServerId}
+DataModel.VIPServerOwnerId {CanSave Only} {Deprecated} {CanSave} {PreferredDescriptorName: PrivateServerOwnerId}
+DataModel.workspace {PreferredDescriptorName: Workspace}
+
 ServiceVisibilityService.HiddenServices {Uses NotScriptable Type without the tag - BinaryString}
 ServiceVisibilityService.VisibleServices {Uses NotScriptable Type without the tag - BinaryString}
+ServiceVisibilityService is NotCreatable but ServiceVisibilityService.HiddenServices has default: ""
 
-SlidingBallConstraint.SoftlockServoUponReachingTarget {Deprecated} {CanSave}
+SlimAnimationDataEntity is NotCreatable but SlimAnimationDataEntity.Handle has default: "-1"
 
-SlimAnimationDataEntity is NotCreatable but SlimAnimationDataEntity.EntitySource has default: "nullptr"
+Smoke.Opacity {CanLoad Only}
+Smoke.RiseVelocity {CanLoad Only}
+Smoke.Size {CanLoad Only}
 
-Sound.EmitterSize {PreferredDescriptorName: RollOffMinDistance}
+Sound.EmitterSize {CanLoad Only} {Deprecated} {PreferredDescriptorName: RollOffMinDistance}
 Sound.MaxDistance {PreferredDescriptorName: RollOffMaxDistance}
-Sound.MinDistance {PreferredDescriptorName: RollOffMinDistance}
-Sound.Pitch {PreferredDescriptorName: PlaybackSpeed}
+Sound.MinDistance {CanLoad Only} {Deprecated} {PreferredDescriptorName: RollOffMinDistance}
+Sound.Pitch {CanLoad Only} {Deprecated} {PreferredDescriptorName: PlaybackSpeed}
 Sound.isPlaying {PreferredDescriptorName: IsPlaying}
-Sound.xmlRead_MaxDistance_3 {PreferredDescriptorName: RollOffMaxDistance}
-Sound.xmlRead_MinDistance_3 {PreferredDescriptorName: RollOffMinDistance}
+Sound.xmlRead_MaxDistance_3 {CanLoad Only} {Deprecated} {PreferredDescriptorName: RollOffMaxDistance}
+Sound.xmlRead_MinDistance_3 {CanLoad Only} {Deprecated} {PreferredDescriptorName: RollOffMinDistance}
+
+ChannelSelectorSoundEffect is NotCreatable but ChannelSelectorSoundEffect.Channel has default: "1"
 
 SoundService is NotCreatable but SoundService.AcousticSimulationEnabled has default: "false"
 
-StarterGui.ResetPlayerGuiOnSpawn {Deprecated} {CanSave}
+Sparkles.Color {CanLoad Only}
 
 StarterPlayer is NotCreatable but StarterPlayer.AllowCustomAnimations has default: "true"
 
-Studio.Theme {Uses NotScriptable Type without the tag - Instance}
-Studio.UI Theme {Deprecated} {CanSave}
+Studio.UI Theme {CanSave Only} {Deprecated} {CanSave}
 
 StudioCameraService is NotCreatable but StudioCameraService.FocusDistance has default: "50"
 
 StudioData is NotCreatable but StudioData.EnableScriptCollabByDefaultOnLoad has default: "false"
 
-StudioDeviceEmulatorService is NotCreatable but StudioDeviceEmulatorService.HasMultiTouchStarted has default: "false"
-
 StudioPublishService is NotCreatable but StudioPublishService.PublishLocked has default: "false"
 
-StudioService.ActiveScript {Uses NotScriptable Type without the tag - Instance}
-StudioService.HoverInstance {Uses NotScriptable Type without the tag - Instance}
+StudioService.UseLocalSpace {CanLoad Only}
 
 StudioTestService is NotCreatable but StudioTestService.EditModeActive has default: "true"
 
+StudioUserService.IsLoggedIn {CanSave Only}
 StudioUserService is NotCreatable but StudioUserService.IsLoggedIn has default: "false"
 
-SurfaceGuiBase.Adornee {Uses NotScriptable Type without the tag - Instance}
+StyleRule.Index {CanLoad Only}
 
-SyncScriptBuilder.RawBytecode {Deprecated} {CanSave} {PreferredDescriptorName: CompileTarget}
-SyncScriptBuilder is NotCreatable but SyncScriptBuilder.CompileTarget has default: "CoreScript"
+StyleDerive.Index {CanLoad Only}
 
-TaskScheduler is NotCreatable but TaskScheduler.SchedulerDutyCycle has default: "0"
+StyleQuery.IsActive {CanSave Only}
+
+TaskScheduler.SchedulerDutyCycle {CanSave Only}
+TaskScheduler.SchedulerRate {CanSave Only}
+TaskScheduler.ThreadPoolSize {CanSave Only}
+
+Team.AutoColorCharacters {CanLoad Only} {Deprecated}
+Team.Score {CanLoad Only} {Deprecated}
 
 TeamCreateData is NotCreatable but TeamCreateData.InitialCameraCFrame has default: "0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1"
 
-Terrain.ClusterGrid {WriteOnly}
-Terrain.ClusterGridV2 {WriteOnly}
-Terrain.ClusterGridV3 {WriteOnly}
-Terrain is NotCreatable but Terrain.AcquisitionMethod has default: "None"
+TeleportAsyncResult.PrivateServerId {CanSave Only}
+TeleportAsyncResult.ReservedServerAccessCode {CanSave Only}
 
-TerrainRegion.GridV3 {WriteOnly}
+TeleportService.CustomizedTeleportUI {CanLoad Only} {Deprecated}
 
-TestService.Is30FpsThrottleEnabled {PreferredDescriptorName: ThrottlePhysicsToRealtime}
+TerrainRegion.GridV3 {WriteOnly} {CanLoad Only}
 
-TextBox.FontSize {PreferredDescriptorName: TextSize}
-TextBox.TextWrap {PreferredDescriptorName: TextWrapped}
+TestService.ErrorCount {CanSave Only}
+TestService.Is30FpsThrottleEnabled {CanLoad Only} {Deprecated} {PreferredDescriptorName: ThrottlePhysicsToRealtime}
+TestService.TestCount {CanSave Only}
+TestService.WarnCount {CanSave Only}
 
-TextButton.FontSize {PreferredDescriptorName: TextSize}
-TextButton.TextWrap {PreferredDescriptorName: TextWrapped}
+TextChannel.DirectChatRequester {CanSave Only}
 
-TextChatMessage is NotCreatable but TextChatMessage.BubbleChatMessageProperties has default: "nullptr"
+BubbleChatConfiguration is NotCreatable but BubbleChatConfiguration.AdorneeName has default: "HumanoidRootPart"
+
+ChannelTabsConfiguration is NotCreatable but ChannelTabsConfiguration.AbsolutePosition has default: "0, 0"
+
+ChatInputBarConfiguration is NotCreatable but ChatInputBarConfiguration.AbsolutePosition has default: "0, 0"
+
+ChatWindowConfiguration is NotCreatable but ChatWindowConfiguration.AbsolutePosition has default: "0, 0"
+
+TextChatMessage is NotCreatable but TextChatMessage.ForModeration has default: "false"
+
+ChatWindowMessageProperties is NotCreatable but ChatWindowMessageProperties.TextColor3 has default: "1, 1, 1"
 
 TextChatService is NotCreatable but TextChatService.ChatTranslationEnabled has default: "true"
 
-TextLabel.FontSize {PreferredDescriptorName: TextSize}
-TextLabel.TextWrap {PreferredDescriptorName: TextWrapped}
-
 TextSource is NotCreatable but TextSource.CanSend has default: "true"
 
-ThirdPartyUserService is NotCreatable but ThirdPartyUserService.FriendCommunicationRestrictionStatus has default: "Unknown"
+ThirdPartyUserService.FriendCommunicationRestrictionStatus {CanSave Only}
+ThirdPartyUserService.HasActiveUser {CanSave Only}
+ThirdPartyUserService.VoiceChatRestrictionStatus {CanSave Only}
 
-Tool.Grip {Uses NotScriptable Type without the tag - CoordinateFrame}
+Translator.LocaleId {CanSave Only}
 
-TorsionSpringConstraint.LimitEnabled {Deprecated} {CanSave} {PreferredDescriptorName: LimitsEnabled}
+TweenBase.PlaybackState {CanSave Only}
 
-TrackerLodController is NotCreatable but TrackerLodController.AudioMode has default: "Auto"
+UIListLayout.HorizontalPadding {CanLoad Only}
+UIListLayout.VerticalPadding {CanLoad Only}
 
-Tween.Instance {Uses NotScriptable Type without the tag - Instance}
+UIPageLayout.CurrentPage {CanSave Only}
 
 UnvalidatedAssetService is NotCreatable but UnvalidatedAssetService.CachedData has default: "{"lastSaveTime":0,"lastKnownPublishRequest":0,"users":[]}"
 
-UserGameSettings is NotCreatable but UserGameSettings.AllTutorialsDisabled has default: "false"
+UserGameSettings.IsUsingCameraYInverted {CanSave Only}
+UserGameSettings.IsUsingGamepadCameraSensitivity {CanSave Only}
+UserGameSettings.MicroProfilerWebServerIP {CanSave Only}
+UserGameSettings.MicroProfilerWebServerPort {CanSave Only}
 
+UserInputService.AccelerometerEnabled {CanSave Only}
+UserInputService.GamepadEnabled {CanSave Only}
+UserInputService.GyroscopeEnabled {CanSave Only}
+UserInputService.KeyboardEnabled {CanSave Only}
 UserInputService.LegacyInputEventsEnabled {Deprecated} {CanSave}
 UserInputService.ModalEnabled {PreferredDescriptorName: TouchControlsEnabled (NOT FOUND)}
-UserInputService.UserHeadCFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
-UserInputService is NotCreatable but UserInputService.AccelerometerEnabled has default: "false"
+UserInputService.MouseDeltaSensitivity {CanLoad Only}
+UserInputService.MouseEnabled {CanSave Only}
+UserInputService.PreferredInput {CanSave Only}
+UserInputService.TouchEnabled {CanSave Only}
+UserInputService.TouchScreenEnabled {CanSave Only}
+UserInputService.VREnabled {CanSave Only}
 
-VRService.PointerHitCFrame {Uses NotScriptable Type without the tag - CoordinateFrame}
 VRService is NotCreatable but VRService.AutomaticScaling has default: "World"
+
+DoubleConstrainedValue.ConstrainedValue {CanLoad Only}
+DoubleConstrainedValue.Value {CanLoad Only}
+
+IntConstrainedValue.ConstrainedValue {CanLoad Only}
+IntConstrainedValue.Value {CanLoad Only}
+
+ValueCurve.Length {CanSave Only}
+ValueCurve.ValueType {CanSave Only}
 
 VersionControlService is NotCreatable but VersionControlService.ScriptCollabEnabled has default: "false"
 
 VideoCaptureService is NotCreatable but VideoCaptureService.Active has default: "false"
 
+VideoDeviceInput.IsReady {CanSave Only}
+
 VoiceChatInternal is NotCreatable but VoiceChatInternal.VoiceChatState has default: "Idle"
 
 VoiceChatService is NotCreatable but VoiceChatService.DefaultDistanceAttenuation has default: "Inverse"
 
-WeldConstraint.Part0 {Uses NotScriptable Type without the tag - BasePart}
-WeldConstraint.Part1 {Uses NotScriptable Type without the tag - BasePart}
+WebSocketClient.ConnectionState {CanSave Only}
 
-Wire.SourceInstance {Uses NotScriptable Type without the tag - Instance}
-Wire.TargetInstance {Uses NotScriptable Type without the tag - Instance}
+WeldConstraint.Active {CanSave Only}
+WeldConstraint.CFrame1 {CanLoad Only}
+WeldConstraint.Enabled {CanLoad Only}
+WeldConstraint.Part0 {CanLoad Only}
+WeldConstraint.Part1 {CanLoad Only}
 
-Workspace.CollisionGroups {WriteOnly}
+Wire.Connected {CanSave Only}
 
-WrapLayer.BindOffset {Uses NotScriptable Type without the tag - CoordinateFrame}
-WrapLayer.ReferenceOrigin {Uses NotScriptable Type without the tag - CoordinateFrame}
-WrapLayer.ReferenceOriginWorld {Uses NotScriptable Type without the tag - CoordinateFrame}
+VideoSampler.TimeLength {CanSave Only}
+VideoSampler.VideoContent {CanSave Only}
+
+WebStreamClient.ConnectionState {CanSave Only}
 
 ==================================================
 NOTSCRIPTABLE VALUE TYPE ANALYSIS
 ==================================================
-ValueTypes found exclusively in NotScriptable properties: 18
+ValueTypes found exclusively in NotScriptable properties: 13
   - AssetContentMap
-  - BasePart
   - BinaryString
   - CSGPropertyData
   - Color3uint8
-  - CoordinateFrame
   - FacsReplicationData
-  - Instance
-  - LodDataEntity
   - NetAssetRef
   - OptionalCoordinateFrame
   - ProtectedString
   - ReplicationPV
   - SharedString
-  - SlimAnimationDataEntity
   - SystemAddress
   - UniqueId
   - Vector3int16
 
-Properties with NotScriptable tag: 93
+Properties with NotScriptable tag: 74
   - AnimationClip.GuidBinaryString
   - AnimationNodeDefinition.InputPinData
   - AnimationRigData.label
@@ -632,13 +743,10 @@ Properties with NotScriptable tag: 93
   - AuroraScript.AuroraScriptBindingsSerialize
   - BasePart.Color3uint8
   - BasePart.NetworkOwnerV3
-  - BasePart.PhysicsRepRootPart
   - BasePart.ReplicationPV
   - BaseWrap.HSRData
   - BaseWrap.HSRMeshIdData
   - BinaryStringValue.Value
-  - DragDetector.PhysicalDragClickedPart
-  - DragDetector.PhysicalDragTargetFrame
   - EditableImage.ImageData
   - EditableMesh.MeshData
   - FaceControls.InternalOverrideFACSData
@@ -650,22 +758,14 @@ Properties with NotScriptable tag: 93
   - Instance.HistoryId
   - Instance.Tags
   - LodDataEntity.EntityData
-  - LodDataEntity.EntityPosition
-  - LodDataEntity.EntitySource
-  - LodDataEntity.SlimAnimationSource
   - LuaSourceContainer.CachedRemoteSource
   - LuaSourceContainer.SandboxedSource
   - MarkerCurve.ValuesAndTimes
   - MeshPart.PhysicsData
   - MeshPart.SolidMeshHolder
-  - Model.LodEntity
-  - Model.ModelMeshCFrame
   - Model.ModelMeshData
-  - Model.SlimAnimationTarget
   - Model.SlimHash
   - Model.WorldPivotData
-  - PVInstance.Origin
-  - PVInstance.Pivot Offset
   - PartOperation.ChildData
   - PartOperation.ChildData2
   - PartOperation.DCDPropertyData
@@ -678,7 +778,6 @@ Properties with NotScriptable tag: 93
   - PartOperationAsset.ChildData
   - PartOperationAsset.MeshData
   - Path2D.PropertiesSerialize
-  - Player.CloudEditCameraCoordinateFrame
   - Player.RawJoinData
   - PlayerGui.InputBindingMappingsRaw
   - RolloutValidation.FirstBinaryString
@@ -688,11 +787,9 @@ Properties with NotScriptable tag: 93
   - RolloutValidation.ThirdBinaryString
   - RolloutValidation.ThirdSharedString
   - RotationCurve.ValuesAndTimes
-  - SlimAnimationDataEntity.EntitySource
   - StyleQuery.ConditionsSerialize
   - StyleRule.PropertiesSerialize
   - StyleRule.PropertyTransitionsSerialize
-  - TeamCreateData.InitialCameraCFrame
   - Terrain.ClusterGridV3
   - Terrain.MaterialColors
   - Terrain.PhysicsGrid
@@ -706,11 +803,6 @@ Properties with NotScriptable tag: 93
   - TriangleMeshPart.ConvexDecompHolder
   - TriangleMeshPart.PhysicalConfigData
   - ValueCurve.ValuesAndTimes
-  - ViewportFrame.CameraCFrame
-  - WeldConstraint.CFrame0
-  - WeldConstraint.CFrame1
-  - WeldConstraint.Part0Internal
-  - WeldConstraint.Part1Internal
   - Workspace.CollisionGroupData
 
 ==================================================
@@ -727,70 +819,40 @@ Detailed list:
 ==================================================
 NOTCREATABLE INHERITANCE ANALYSIS
 ==================================================
-NotCreatable classes that inherit from creatable classes: 24
-  - AssetSoundEffect (inheritance: AssetSoundEffect -> CustomSoundEffect -> SoundEffect -> Instance -> Object)
-  - AudioPages (inheritance: AudioPages -> Pages -> Instance -> Object)
-  - BanHistoryPages (inheritance: BanHistoryPages -> Pages -> Instance -> Object)
-  - CapturesPages (inheritance: CapturesPages -> Pages -> Instance -> Object)
-  - ChannelSelectorSoundEffect (inheritance: ChannelSelectorSoundEffect -> CustomSoundEffect -> SoundEffect -> Instance -> Object)
+NotCreatable classes that inherit from creatable classes: 7
+  - BackpackItem (inheritance: BackpackItem -> Model -> PVInstance -> Instance -> Object)
   - ChatWindowMessageProperties (inheritance: ChatWindowMessageProperties -> TextChatMessageProperties -> Instance -> Object)
   - CloudLocalizationTable (inheritance: CloudLocalizationTable -> LocalizationTable -> Instance -> Object)
-  - CoreGui (inheritance: CoreGui -> BasePlayerGui -> Instance -> Object)
-  - CoreScript (inheritance: CoreScript -> BaseScript -> LuaSourceContainer -> Instance -> Object)
-  - CustomSoundEffect (inheritance: CustomSoundEffect -> SoundEffect -> Instance -> Object)
-  - DataStore (inheritance: DataStore -> GlobalDataStore -> Instance -> Object)
-  - DataStoreKeyPages (inheritance: DataStoreKeyPages -> Pages -> Instance -> Object)
-  - DockWidgetPluginGui (inheritance: DockWidgetPluginGui -> PluginGui -> LayerCollector -> GuiBase2d -> GuiBase -> Instance -> Object)
-  - EmotesPages (inheritance: EmotesPages -> InventoryPages -> Pages -> Instance -> Object)
-  - LegacyStudioBridge (inheritance: LegacyStudioBridge -> ILegacyStudioBridge -> Instance -> Object)
-  - NetworkClient (inheritance: NetworkClient -> NetworkPeer -> Instance -> Object)
-  - NetworkServer (inheritance: NetworkServer -> NetworkPeer -> Instance -> Object)
-  - PlayerGui (inheritance: PlayerGui -> BasePlayerGui -> Instance -> Object)
-  - PluginGui (inheritance: PluginGui -> LayerCollector -> GuiBase2d -> GuiBase -> Instance -> Object)
-  - QWidgetPluginGui (inheritance: QWidgetPluginGui -> PluginGui -> LayerCollector -> GuiBase2d -> GuiBase -> Instance -> Object)
-  - RecommendationPages (inheritance: RecommendationPages -> Pages -> Instance -> Object)
-  - SlimContentProvider (inheritance: SlimContentProvider -> CacheableContentProvider -> Instance -> Object)
+  - Platform (inheritance: Platform -> Part -> FormFactorPart -> BasePart -> PVInstance -> Instance -> Object)
   - Status (inheritance: Status -> Model -> PVInstance -> Instance -> Object)
-  - Terrain (inheritance: Terrain -> BasePart -> PVInstance -> Instance -> Object)
+  - Workspace (inheritance: Workspace -> WorldRoot -> Model -> PVInstance -> Instance -> Object)
+  - WorldRoot (inheritance: WorldRoot -> Model -> PVInstance -> Instance -> Object)
 
 ==================================================
 CREATABLE SIBLINGS OF NOTCREATABLE CLASSES
 ==================================================
-NotCreatable classes that have creatable siblings: 15
-  - AudioPages (parent: Pages) has creatable siblings:
-      - CatalogPages
-      - DataStoreListingPages
-      - DataStorePages
-      - DataStoreVersionPages
-      - FriendPages
-      - InventoryPages
-      - MemoryStoreHashMapPages
-      - OutfitPages
-      - StandardPages
-  - BanHistoryPages (parent: Pages) has creatable siblings:
-      - CatalogPages
-      - DataStoreListingPages
-      - DataStorePages
-      - DataStoreVersionPages
-      - FriendPages
-      - InventoryPages
-      - MemoryStoreHashMapPages
-      - OutfitPages
-      - StandardPages
-  - CapturesPages (parent: Pages) has creatable siblings:
-      - CatalogPages
-      - DataStoreListingPages
-      - DataStorePages
-      - DataStoreVersionPages
-      - FriendPages
-      - InventoryPages
-      - MemoryStoreHashMapPages
-      - OutfitPages
-      - StandardPages
+NotCreatable classes that have creatable siblings: 33
+  - BackpackItem (parent: Model) has creatable siblings:
+      - Actor
+  - BasePart (parent: PVInstance) has creatable siblings:
+      - Camera
+      - Model
+  - BaseScript (parent: LuaSourceContainer) has creatable siblings:
+      - AuroraScript
+      - ModuleScript
+  - BevelMesh (parent: DataModelMesh) has creatable siblings:
+      - FileMesh
   - ChatWindowMessageProperties (parent: TextChatMessageProperties) has creatable siblings:
       - BubbleChatMessageProperties
-  - CoreGui (parent: BasePlayerGui) has creatable siblings:
-      - StarterGui
+  - Clothing (parent: CharacterAppearance) has creatable siblings:
+      - BodyColors
+      - CharacterMesh
+      - ShirtGraphic
+      - Skin
+  - ControllerSensor (parent: SensorBase) has creatable siblings:
+      - AtmosphereSensor
+      - BuoyancySensor
+      - FluidForceSensor
   - CoreScript (parent: BaseScript) has creatable siblings:
       - Script
   - CustomSoundEffect (parent: SoundEffect) has creatable siblings:
@@ -803,45 +865,117 @@ NotCreatable classes that have creatable siblings: 15
       - PitchShiftSoundEffect
       - ReverbSoundEffect
       - TremoloSoundEffect
-  - DataStore (parent: GlobalDataStore) has creatable siblings:
-      - OrderedDataStore
-  - DataStoreKeyPages (parent: Pages) has creatable siblings:
-      - CatalogPages
-      - DataStoreListingPages
-      - DataStorePages
-      - DataStoreVersionPages
-      - FriendPages
-      - InventoryPages
-      - MemoryStoreHashMapPages
-      - OutfitPages
-      - StandardPages
-  - PlayerGui (parent: BasePlayerGui) has creatable siblings:
-      - StarterGui
+  - DynamicRotate (parent: JointInstance) has creatable siblings:
+      - Glue
+      - Motor
+      - Rotate
+      - Snap
+      - VelocityMotor
+      - Weld
+  - FormFactorPart (parent: BasePart) has creatable siblings:
+      - CornerWedgePart
+      - TrussPart
+      - VehicleSeat
+  - GuiBase2d (parent: GuiBase) has creatable siblings:
+      - Path2D
+  - GuiBase3d (parent: GuiBase) has creatable siblings:
+      - Path2D
+  - GuiButton (parent: GuiObject) has creatable siblings:
+      - CanvasGroup
+      - Frame
+      - RelativeGui
+      - ScrollingFrame
+      - TextBox
+      - VideoDisplay
+      - VideoFrame
+      - ViewportFrame
+  - GuiLabel (parent: GuiObject) has creatable siblings:
+      - CanvasGroup
+      - Frame
+      - RelativeGui
+      - ScrollingFrame
+      - TextBox
+      - VideoDisplay
+      - VideoFrame
+      - ViewportFrame
+  - HandleAdornment (parent: PVAdornment) has creatable siblings:
+      - ParabolaAdornment
+      - SelectionSphere
+  - HandlesBase (parent: PartAdornment) has creatable siblings:
+      - SurfaceSelection
+  - InstanceAdornment (parent: GuiBase3d) has creatable siblings:
+      - FloorWire
+  - ManualSurfaceJointInstance (parent: JointInstance) has creatable siblings:
+      - Glue
+      - Motor
+      - Rotate
+      - Snap
+      - VelocityMotor
+      - Weld
+  - PVAdornment (parent: GuiBase3d) has creatable siblings:
+      - FloorWire
+  - PartAdornment (parent: GuiBase3d) has creatable siblings:
+      - FloorWire
+  - Platform (parent: Part) has creatable siblings:
+      - FlagStand
+      - Seat
+      - SkateboardPlatform
+      - SpawnLocation
   - PluginGui (parent: LayerCollector) has creatable siblings:
       - BillboardGui
       - ScreenGui
-      - SurfaceGuiBase
-  - RecommendationPages (parent: Pages) has creatable siblings:
-      - CatalogPages
-      - DataStoreListingPages
-      - DataStorePages
-      - DataStoreVersionPages
-      - FriendPages
-      - InventoryPages
-      - MemoryStoreHashMapPages
-      - OutfitPages
-      - StandardPages
-  - SlimContentProvider (parent: CacheableContentProvider) has creatable siblings:
-      - HSRDataContentProvider
-      - MeshContentProvider
-      - SolidModelContentProvider
+  - SelectionLasso (parent: GuiBase3d) has creatable siblings:
+      - FloorWire
+  - SlidingBallConstraint (parent: Constraint) has creatable siblings:
+      - AlignOrientation
+      - AlignPosition
+      - AngularVelocity
+      - AnimationConstraint
+      - BallSocketConstraint
+      - HingeConstraint
+      - LineForce
+      - LinearVelocity
+      - PlaneConstraint
+      - RigidConstraint
+      - RodConstraint
+      - RopeConstraint
+      - SpringConstraint
+      - Torque
+      - TorsionSpringConstraint
+      - UniversalConstraint
+      - VectorForce
   - Status (parent: Model) has creatable siblings:
       - Actor
-      - BackpackItem
-      - WorldRoot
+  - SurfaceGuiBase (parent: LayerCollector) has creatable siblings:
+      - BillboardGui
+      - ScreenGui
   - Terrain (parent: BasePart) has creatable siblings:
       - CornerWedgePart
-      - FormFactorPart
-      - TriangleMeshPart
       - TrussPart
       - VehicleSeat
+  - TriangleMeshPart (parent: BasePart) has creatable siblings:
+      - CornerWedgePart
+      - TrussPart
+      - VehicleSeat
+  - UIConstraint (parent: UIComponent) has creatable siblings:
+      - UICorner
+      - UIDragDetector
+      - UIFlexItem
+      - UIGradient
+      - UIPadding
+      - UIScale
+      - UIShadow
+      - UIStroke
+  - UILayout (parent: UIComponent) has creatable siblings:
+      - UICorner
+      - UIDragDetector
+      - UIFlexItem
+      - UIGradient
+      - UIPadding
+      - UIScale
+      - UIShadow
+      - UIStroke
+  - Workspace (parent: WorldRoot) has creatable siblings:
+      - WorldModel
+  - WorldRoot (parent: Model) has creatable siblings:
+      - Actor

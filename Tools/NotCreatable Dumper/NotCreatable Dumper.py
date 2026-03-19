@@ -13,7 +13,7 @@ def fetch(vh=None):
         name = c["Name"]
         if tags.get("NotCreatable") and not tags.get("Service") and \
            not any(x in name for x in ["Base", "Page", "Plugin", "Setting"]):
-            s += f"{name}\n"
+            s += f"{name}\n\n"
     return s
 
 if __name__ == "__main__":

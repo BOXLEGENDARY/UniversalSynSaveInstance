@@ -1,9 +1,9 @@
-Version v1: version-8b02f75e5b5343a1
-Version v2: version-8b02f75e5b5343a1
+Version v1: version-913142fd943640d2
+Version v2: version-913142fd943640d2
 ================================================================================
 
 
-Different Tags (493):
+Different Tags (490):
 ----------------------------------------
   ActivityHistoryEventService
     v1: ['NotCreatable', 'Service']
@@ -89,9 +89,6 @@ Different Tags (493):
   AudioSearchParams
     v1: ['NotReplicated']
     v2: []
-  AuroraHandle
-    v1: ['NotCreatable', 'Deprecated']
-    v2: ['NotCreatable', 'NotReplicated']
   AuroraScript
     v1: ['Deprecated']
     v2: []
@@ -776,9 +773,6 @@ Different Tags (493):
   MLModelDeliveryService
     v1: ['NotCreatable', 'Service']
     v2: ['NotCreatable', 'NotReplicated', 'Service']
-  MakeupDescription
-    v1: ['NotBrowsable']
-    v2: []
   ManualGlue
     v1: ['Deprecated', {'PreferredDescriptorName': 'WeldConstraint', 'ThreadSafety': 'Unknown'}]
     v2: []
@@ -1220,9 +1214,6 @@ Different Tags (493):
   StyleBase
     v1: ['NotCreatable']
     v2: []
-  StyleQuery
-    v1: ['NotBrowsable']
-    v2: []
   SurfaceGuiBase
     v1: ['NotCreatable']
     v2: []
@@ -1351,6 +1342,9 @@ Different Tags (493):
     v2: []
   UILayout
     v1: ['NotCreatable']
+    v2: []
+  UIShadow
+    v1: ['NotBrowsable']
     v2: []
   UniqueIdLookupService
     v1: ['NotCreatable', 'Service']
@@ -1481,14 +1475,11 @@ Different Tags (493):
   WrapDeformMeshProvider
     v1: ['NotCreatable', 'Service', 'NotReplicated']
     v2: ['NotReplicated']
-  WrapTextureTransfer
-    v1: ['NotBrowsable']
-    v2: []
 
 ================================================================================
 Summary:
-  Total: 8595
-  Same: 8102
-  Different: 493
+  Total: 8613
+  Same: 8123
+  Different: 490
   Only v1: 0
   Only v2: 0

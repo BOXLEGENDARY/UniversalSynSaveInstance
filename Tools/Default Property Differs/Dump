@@ -1,5 +1,5 @@
-Version v1: version-8b02f75e5b5343a1
-Version v2: version-8b02f75e5b5343a1
+Version v1: version-913142fd943640d2
+Version v2: version-913142fd943640d2
 ================================================================================
 
 
@@ -502,7 +502,7 @@ Different Default values (771):
     v2: '1'
   DebugSettings.InstanceCount
     v1: '__api_dump_skipped_class__'
-    v2: '916'
+    v2: '915'
   DebugSettings.IsScriptStackTracingEnabled
     v1: '__api_dump_skipped_class__'
     v2: 'true'
@@ -517,7 +517,7 @@ Different Default values (771):
     v2: 'false'
   DebugSettings.RobloxVersion
     v1: '__api_dump_skipped_class__'
-    v2: '0.712.0.7120913'
+    v2: '0.713.0.7130910'
   DebugSettings.TickCountPreciseOverride
     v1: '__api_dump_skipped_class__'
     v2: 'Precise'
@@ -934,7 +934,7 @@ Different Default values (771):
     v2: '112639'
   NetworkSettings.FreeMemoryMBytes
     v1: '__api_dump_skipped_class__'
-    v2: '96104.1016'
+    v2: '96575.1172'
   NetworkSettings.HttpProxyEnabled
     v1: '__api_dump_skipped_class__'
     v2: 'false'
@@ -1597,7 +1597,7 @@ Different Default values (771):
     v2: '__api_dump_not_serializable__'
   RunService.ClientGitHash
     v1: '__api_dump_class_not_creatable__'
-    v2: 'ea0aef329279d41fa90fbfb4d5824ad9b776f67
+    v2: '62a35eee475c0f763aac3e4c000e3f1e71ca5d5
   RunService.FrameNumber
     v1: '__api_dump_class_not_creatable__'
     v2: '0'
@@ -1783,7 +1783,7 @@ Different Default values (771):
     v2: '0'
   Stats.InstanceCount
     v1: '__api_dump_class_not_creatable__'
-    v2: '1064'
+    v2: '1063'
   Stats.MemoryTrackingEnabled
     v1: '__api_dump_class_not_creatable__'
     v2: 'true'
@@ -2321,8 +2321,8 @@ Different Default values (771):
 
 ================================================================================
 Summary:
-  Total: 3805
-  Same: 3034
+  Total: 3817
+  Same: 3046
   Different: 771
   Only v1: 0
   Only v2: 0

@@ -1,4 +1,8 @@
-import os, sys, requests, re, json
+import os, sys, requests, json, time
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CACHE_FILE = os.path.join(SCRIPT_DIR, "api_dump_cache.json")
+CACHE_TTL = 60 * 60 * 2  # 2 hours
 
 
 def array_to_dictionary(t, h=None):
@@ -10,20 +14,25 @@ def array_to_dictionary(t, h=None):
     return {v: True for v in t if isinstance(v, str)}
 
 
-def write_dump_file(content, filename="Dump", script_dir=None):
+def write_dump_file(content, filename="Dump", script_dir=None, skip_lines=1):
     if script_dir is None:
         script_dir = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(script_dir, filename)
+
     if os.path.exists(path):
         with open(path) as f:
             old = f.read().splitlines()
         new = content.splitlines()
-        if len(old) > 1 and len(new) > 1 and "\n".join(old[1:]) == "\n".join(new[1:]):
-            print("No content changes, skipping write.")
+
+        if "\n".join(old[skip_lines:]) == "\n".join(new[skip_lines:]):
+            print(
+                f"No content changes (ignoring first {skip_lines} lines), skipping write."
+            )
             return False
+
     with open(path, "w") as f:
         f.write(content)
-    print("File written.")
+    print("File written:", path)
     return True
 
 
@@ -48,7 +57,7 @@ def normalize_v2_dump(data):
         elif c.get("isUserFacing") == False:
             c_tags.append("NotReplicated")
         if c.get("deprecated"):
-                c_tags.append("Deprecated")
+            c_tags.append("Deprecated")
 
         if nc["Name"].endswith("Service"):
             c_tags.append("Service")
@@ -87,10 +96,8 @@ def normalize_v2_dump(data):
 
             if m.get("memberType") == "Property":
                 if m.get("writeSecurity") == None:  # unreliable
-                    print(nm["Name"])
                     m_tags.append("ReadOnly")
                 if m.get("readSecurity") == None:  # unreliable
-                    print(nm["Name"])
                     m_tags.append("WriteOnly")
 
                 nm["Security"] = {
@@ -155,29 +162,138 @@ def normalize_v2_dump(data):
     return res
 
 
-def get_api_response(version_hash=None, api_version="auto"):
-    def fetch(u):
-        try:
-            r = requests.get(u.strip())
-            r.raise_for_status()
-            return r
-        except:
-            return None
+def fetch(u):
+    try:
+        r = requests.get(u.strip())
+        r.raise_for_status()
+        return r
+    except:
+        return None
+
+
+def parse_version(v):
+    return tuple(int(x) for x in v.split("."))
+
+
+def get_version_history_latest():
+    try:
+        txt = requests.get(
+            "https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/version-history.json"
+        ).text
+
+        for line in reversed(txt.splitlines()):
+            if "version-" in line:
+                parts = line.strip().strip(",")
+                k, v = parts.split(":")
+                return k.strip().strip('"'), v.strip().strip('"')
+    except:
+        pass
+
+
+def get_clientsettings(url):
+    try:
+        data = fetch(url).json()
+        return data.get("version"), data.get("clientVersionUpload")
+    except:
+        return None
+
+
+def get_latest_version():
+    candidates = []
+
+    vh = get_version_history_latest()
+    if vh:
+        candidates.append(vh)
+
+    zb = get_clientsettings(
+        "https://clientsettings.rbxcdn.com/v2/client-version/WindowsStudio64/channel/zbeta"
+    )
+    if zb:
+        candidates.append(zb)
+
+    live = get_clientsettings(
+        "https://clientsettings.rbxcdn.com/v2/client-version/WindowsStudio64"
+    )
+    if live:
+        candidates.append(live)
+
+    if not candidates:
+        return None, None
+
+    candidates.sort(key=lambda x: parse_version(x[0]), reverse=True)
+    return candidates[0]
+
+
+def load_cache(api_version):
+    """Load cached response for a given API version"""
+    if not os.path.exists(CACHE_FILE):
+        return None, None
+    try:
+        with open(CACHE_FILE, "r") as f:
+            data = json.load(f)
+
+        if api_version in data:
+            entry = data[api_version]
+            if time.time() - entry["time"] < CACHE_TTL:
+                print("Using cached dump for", api_version)
+
+                class CachedResponse:
+                    def __init__(self, text):
+                        self.text = text
+                        self._json = None
+
+                    def json(self):
+                        if self._json is None:
+                            self._json = json.loads(self.text)
+                        return self._json
+
+                return CachedResponse(entry["dump"]), entry.get("version_hash")
+    except Exception as e:
+        print("Failed to load cache:", e)
+    return None, None
+
+
+def save_cache(resp_obj, api_version, version_hash):
+    """Save API dump and version_hash for a given API version"""
+    try:
+        if os.path.exists(CACHE_FILE):
+            with open(CACHE_FILE, "r") as f:
+                data = json.load(f)
+        else:
+            data = {}
+
+        if isinstance(resp_obj, str):
+            dump_text = resp_obj
+        elif hasattr(resp_obj, "text"):
+            dump_text = resp_obj.text
+        else:
+            dump_text = json.dumps(resp_obj.json())
+
+        data[api_version] = {
+            "time": time.time(),
+            "dump": dump_text,
+            "version_hash": version_hash,
+        }
+        with open(CACHE_FILE, "w") as f:
+            json.dump(data, f)
+    except Exception as e:
+        print("Failed to save cache:", e)
+
+
+def get_api_response(version_hash=None, api_version="v1"):
+    """Fetch API dump (v1/v2), uses cache per version+api"""
+    cached, cached_vh = load_cache(api_version)
+    if cached:
+        return cached, cached_vh
 
     if not version_hash:
-        try:
-            txt = requests.get("https://setup.rbxcdn.com/DeployHistory.txt").text
-            for line in reversed(txt.splitlines()):
-                m = re.search(r"(version-[^\s]+)", line)
-                if m:
-                    version_hash = m.group(1)
-                    break
-        except:
-            pass
+        version, version_hash = get_latest_version()
 
     if not version_hash:
         print("No version hash found")
         sys.exit(1)
+
+    print("Using:", version_hash)
 
     urls = []
     if api_version == "auto":
@@ -185,28 +301,38 @@ def get_api_response(version_hash=None, api_version="auto"):
             ("v1", f"https://setup.rbxcdn.com/{version_hash}-Full-API-Dump.json"),
             ("v2", f"https://setup.rbxcdn.com/{version_hash}-API-Dump-2.json"),
         ]
-    elif api_version == "v2":
-        urls = [("v2", f"https://setup.rbxcdn.com/{version_hash}-API-Dump-2.json")]
     else:
-        urls = [("v1", f"https://setup.rbxcdn.com/{version_hash}-Full-API-Dump.json")]
+        urls = [
+            (
+                api_version,
+                f"https://setup.rbxcdn.com/{version_hash}-{'Full-API-Dump.json' if api_version=='v1' else 'API-Dump-2.json'}",
+            )
+        ]
 
     for v, u in urls:
         print(f"Trying {v}: {u}")
         r = fetch(u)
-        if r:
-            data = r.json()
-            if v == "v2":
+        if not r:
+            continue
+        if v == "v2":
 
-                class W:
-                    def __init__(self, orig, data):
-                        self._o, self._d = orig, data
+            class W:
+                def __init__(self, orig, data):
+                    self._o, self._d = orig, data
 
-                    def json(self):
-                        return self._d
+                def json(self):
+                    return self._d
 
-                    def __getattr__(self, a):
-                        return getattr(self._o, a)
+                def __getattr__(self, a):
+                    return getattr(self._o, a)
 
-                return W(r, normalize_v2_dump(data)), version_hash
-            return r, version_hash
-    sys.exit(1)
+            normalized = normalize_v2_dump(r.json())
+            result = W(r, normalized)
+            save_cache(json.dumps(normalized), v, version_hash)
+        else:
+            result = r
+            save_cache(result, v, version_hash)
+
+        return result, version_hash
+
+    raise RuntimeError("Failed to fetch API dump")
