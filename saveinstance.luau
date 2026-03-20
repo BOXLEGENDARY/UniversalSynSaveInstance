@@ -700,7 +700,7 @@ XML_Descriptors = {
 	--------------------------------------------------------------
 	--------------------------------------------------------------
 	--------------------------------------------------------------
-	-- AssetContentMap = function(raw) end, AssetContentMapSerializationEnabled	FFlag and "new" (?) voxel grid required
+	-- AssetContentMap = function(raw) return "[]" end, AssetContentMapSerializationEnabled	& VoxelGridNew5_PlaceFilter	FFlags
 	Axes = function(raw)
 		-- The text of this element is formatted as an integer between 0 and 7
 
@@ -1513,14 +1513,23 @@ do
 		DoubleConstrainedValue = { value = "Value" },
 		IntConstrainedValue = { value = "Value" },
 
-		-- CustomEvent = {PersistedCurrentValue=function(instance) -- * Class is Deprecated and :SetValue doesn't seem to affect GetCurrentValue anymore
-		-- 	local Receiver  = instance:GetAttachedReceivers()[1]
-		-- 	if Receiver then
-		-- 		return Receiver:GetCurrentValue()
-		-- 	else
-		-- 		error("No Receiver", 2)
-		-- 	end
-		-- end},
+		CustomEvent = {
+			PersistedCurrentValue = function(instance)
+				local receiver = instance:GetAttachedReceivers()[1]
+				if receiver then
+					return receiver:GetCurrentValue()
+				end
+			end,
+		},
+
+		-- Lighting = {
+		-- 	ExtendLightRangeTo120 = function() -- Seems default true now
+		-- 		local light = Instance.new("PointLight")
+		-- 		light.Range = 200
+		-- 		return light.Range == 120 -- Ideally cache
+		-- 	end,
+		-- },
+
 		Terrain = {
 			AcquisitionMethod = "LastUsedModificationMethod", -- ? Not sure, RobloxScriptSecurity
 			MaterialColors = function(instance) -- https://github.com/RobloxAPI/spec/blob/master/properties/MaterialColors.md
@@ -1612,6 +1621,12 @@ do
 		},
 
 		Model = {
+			ModelMeshCFrame = function(instance)
+				return instance:GetModelCFrame() -- GetBoundingBox
+			end,
+			ModelMeshSize = function(instance)
+				return instance:GetExtentsSize() -- GetBoundingBox, GetModelSize
+			end,
 			Scale = function(instance) -- CanSave & CanLoad false
 				return instance:GetScale()
 			end,
@@ -1871,6 +1886,8 @@ do
 								}
 								valueType_Name = renames[valueType_Name] or valueType_Name
 							end
+
+							-- property.Display.DeprecationMessage can be used to track Deprecated tag (not always though)
 
 							local member = {
 								Name = propertyName,
