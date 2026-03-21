@@ -4104,40 +4104,31 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 				local test_str = string.rep("\1\0\0\0\1\2\3\4\5\6\7", 50)
 
 				do
-					if not bit32.byteswap or not pcall(bit32.byteswap, 1) then -- Because Fluxus is missing byteswap
-						bit32 = table.clone(bit32)
-
-						local function tobit(num)
-							num %= (bit32.bxor(num, 32))
-							if 0x80000000 < num then
-								num -= bit32.bxor(num, 32)
+					if
+						not bit32.byteswap
+						or not (function()
+							local o, r = pcall(bit32.byteswap, 2712847316)
+							if not o then
+								return -- It might be disabled on some builds
 							end
-							return num
-						end
+							return r == 3569595041
+						end)()
+					then -- Because Fluxus is missing byteswap
+						-- https://github.com/luau-lang/rfcs/blob/master/docs/function-bit32-byteswap.md
+						local b32 = table.clone(bit32)
 
-						bit32.byteswap = function(num)
-							local BYTE_SIZE = 8
-							local MAX_BYTE_VALUE = 255
-
-							num %= bit32.bxor(2, 32)
-
-							local a = bit32.band(num, MAX_BYTE_VALUE)
-							num = bit32.rshift(num, BYTE_SIZE)
-
-							local b = bit32.band(num, MAX_BYTE_VALUE)
-							num = bit32.rshift(num, BYTE_SIZE)
-
-							local c = bit32.band(num, MAX_BYTE_VALUE)
-							num = bit32.rshift(num, BYTE_SIZE)
-
-							local d = bit32.band(num, MAX_BYTE_VALUE)
-							num = tobit(
-								bit32.lshift(bit32.lshift(bit32.lshift(a, BYTE_SIZE) + b, BYTE_SIZE) + c, BYTE_SIZE) + d
+						b32.byteswap = function(n)
+							return bit32.bor(
+								bit32.lshift(n, 24),
+								bit32.band(bit32.lshift(n, 8), 0xFF0000),
+								bit32.band(bit32.rshift(n, 8), 0xFF00),
+								bit32.rshift(n, 24)
 							)
-							return num
 						end
-
-						table.freeze(bit32)
+						if table.isfrozen(bit32) then
+							b32 = table.freeze(b32)
+						end
+						getgenv().bit32 = b32
 					end
 
 					-- Credits @daily3014 & @XoifaiI
