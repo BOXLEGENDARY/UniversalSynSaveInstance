@@ -1805,9 +1805,10 @@ do
 						if not ok then
 							return
 						end
-
-						local line = '"' .. res.version .. '": "' .. res.clientVersionUpload
-						return process_line(line, true)
+						if res.version and res.clientVersionUpload then -- just in case
+							local line = '"' .. res.version .. '": "' .. res.clientVersionUpload
+							return process_line(line, true)
+						end
 					end
 
 					if not exact_match then
@@ -1832,6 +1833,7 @@ do
 			end,
 			[3] = function()
 				-- TODO At the time of writing this is missing a way to confirm NotCreatable & NotScriptable
+				-- also is missing some classes like UserGameSettings, not that important though as none of them appear under DataModel
 				local classes, classes_size = {}, 1
 
 				for _, api_class in service.ReflectionService:GetClasses(filter) do
@@ -1926,13 +1928,13 @@ do
 			local o, r = pcall(fetcher)
 			if o and r then
 				API_Dump = r
-				if i ~= 1 and i ~= #APIDUMP_FETCHERS then -- relies on readfile being first priority
+				if i == 2 then -- relies on [2] being the same
 					if writefile then
 						writefile(FULL_VERSION, API_Dump)
 					end
 				end
 				break
-			elseif r and 2 < i then
+			elseif r ~= false and 2 < i then
 				warn("[DEBUG] Failed to get", FULL_VERSION, "version API Dump, trying fallbacks..")
 				warn("[DEBUG] Method number:", i, "Reason:", r)
 			end
@@ -4027,7 +4029,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 					}
 				end
 				local msg =
-					"[SAFEMODE] Saving..\nDo NOT leave\n[WARNING] LVL7 Executor RECOMMENDED for SAFETY\nTo Disable this: SafeMode=false (Less Protection)"
+					"[SAVEINSTANCE SAFEMODE] Saving..\nDo NOT leave\nLVL7 Executor RECOMMENDED for more SAFETY\nTo Disable this: SafeMode=false (Less Protection)"
 				local function Kick()
 					LocalPlayer:Kick(msg)
 				end
