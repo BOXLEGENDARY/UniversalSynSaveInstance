@@ -3953,7 +3953,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		do
 			local islclosure = islclosure
 			local isexecutorclosure = isexecutorclosure or checkclosure or isourclosure
-			local hookfunction = EXECUTOR_NAME ~= "SirHurt" and hookfunction
+			local hookfunction = not ArrayToDict({ "SirHurt", "Volt" })[EXECUTOR_NAME] and hookfunction
 
 			local function filterNkill(f)
 				if not f then
