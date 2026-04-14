@@ -1907,6 +1907,12 @@ do
 
 							local category = valueType.Category
 
+							local member_tags = {}
+
+							if not next(property.Permits) then
+								table.insert(member_tags, "NotScriptable")
+							end
+
 							if valueType_Name == "Enum" then
 								category, valueType_Name = "Enum", valueType.EnumType
 							elseif valueType_Name == "RefType" then
@@ -1932,6 +1938,10 @@ do
 								-- Special = Special,
 								-- Tags = MemberTags,
 							}
+
+							if #member_tags ~= 0 then
+								member.Tags = member_tags
+							end
 
 							members[members_size] = member
 							members_size += 1
@@ -2026,7 +2036,6 @@ do
 
 			local ContentProperties
 			for _, Member in API_Class.Members do
-				-- ? print(game:GetService("ReflectionService"):GetPropertyNames("TextBox"))
 				if Member.MemberType == "Property" then
 					local Serialization = Member.Serialization
 
