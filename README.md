@@ -18,7 +18,7 @@ synsaveinstance(Options)
 # Universal Syn Save Instance
 
 Or shortly USSI, a project aimed at resurrecting saveinstance function from Synapse X.<br />
-Reason: Many Executors fail miserably at providing good user experience when it comes to tinkering with saving instances.
+Reason: Many tools fail miserably at providing good user experience when it comes to tinkering with saving instances.
 
 > [!WARNING]
 > As stated under the Section 7 (b) in the LICENSE:
@@ -26,11 +26,24 @@ Reason: Many Executors fail miserably at providing good user experience when it 
 > - You are **NOT** allowed to claim authorship of the source code provided in this repository
 > - You **MUST** always include the following [License](https://github.com/luau/UniversalSynSaveInstance/blob/main/LICENSE)
 
+## Disclaimer
+
+This project is provided for development, debugging, archival, and research purposes within the Roblox platform.
+
+It is not intended for misuse, including violating platform rules, unauthorized access, or redistribution of content without permission.
+
+Users are responsible for ensuring their usage complies with all applicable rules, including Roblox’s Terms of Use.
+
+The maintainers do not support or condone misuse of this software and are not responsible for how it is used.
+
 > [!TIP]
-> Important part about this saveinstance is that it doesn't modify anything, therefore reduces the amount of detection vectors by a lot.<br />
-> You can also enable the `SafeMode` option to completely bypass any detections and save **ANY** game!<br /><br />
+> Important part about this saveinstance is that it doesn't modify game state, which helps maintain stability and compatibility.<br />
+> You can also enable the `SafeMode` option to improve compatibility and ensure more reliable saving across a wide range of experiences.<br /><br /> You can read more about it here [Documentation]
 > If this script is helpful to you, please click `⭐ Star` in the upper right corner of the page to support it, thank you!
 
+# Documentation
+
+[Documentation]
 
 # 💖 Support Us & Our Work
 
@@ -84,7 +97,7 @@ Reason: Many Executors fail miserably at providing good user experience when it 
   * [x] RemovePlayerCharacters
   * [x] SavePlayers
   * [x] ShowStatus
-    - [x] ~~Add Drawing Library support for ShowStatus~~ Can't reliably test if it's working on an executor
+    - [x] ~~Add Drawing Library support for ShowStatus~~ Can't reliably test if it's working on a tool
   * [x] IsolatePlayerGui (same as IsolateLocalPlayer)
   * [x] Callback
   * [x] ~~CopyToClipboard/Clipboard~~ Use Callback instead
@@ -93,7 +106,7 @@ Reason: Many Executors fail miserably at providing good user experience when it 
   - Test table.concat vs string ..= with a full buffer (this benchmark differs per usecase)
 - [ ] Add Option to restart saveinstance from the point that it crashed on (perhaps by skipping)
 - [ ] Maybe modes should do more than just determining the list of instances to save, like changing IgnoreDefaultProperties to false if mode is "full" for example
-- [x] Add Lua & Luau versions instead of merged (WARNING: LUAU MIGHT BE MORE UPDATED THAN LUA VERSION, lua version exists just for the sake of old & bad executors, ask devs of your executors to support luau as its latest & greatest)
+- [x] Add Lua & Luau versions instead of merged (WARNING: LUAU MIGHT BE MORE UPDATED THAN LUA VERSION, lua version exists just for the sake of old & bad tools, ask devs of your tools to support luau as its latest & greatest)
 - [x] ~~Add Support for multiple Instances to be saved as a model~~ IsModel = true & ExtraInstances
 - [ ] Force disable ParticleEmitters in case something like IgnorePropertiesOfNotScriptsOnScriptsMode is enabled (they stack in one place and create huge lag)
 - [ ] Be able to specify which special properties you want saved (to avoid saving all)
@@ -111,6 +124,7 @@ resources include:
 
 \*\*\* View source code of this file for more credits
 
+[Documentation]: https://luau.github.io/UniversalSynSaveInstance/api/SynSaveInstance
 [@Acrillis]: https://github.com/Acrillis
 [@Anaminus]: https://github.com/Anaminus
 [@Dekkonot]: https://github.com/Dekkonot

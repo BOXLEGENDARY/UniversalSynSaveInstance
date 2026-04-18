@@ -1,4 +1,4 @@
-version-913142fd943640d2
+version-7091b4c2589245e0
 
 Object
 
@@ -270,6 +270,8 @@ TotalCountTimeIntervalItem
 
 StudioWidget
 
+StudioScreenshotCapture
+
 StudioTheme
 
 TeleportAsyncResult
@@ -331,6 +333,8 @@ TerrainReadOperation
 TerrainWriteOperation
 
 VideoSampler
+
+VirtualInput
 
 VoxelBuffer
 

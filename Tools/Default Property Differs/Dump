@@ -1,9 +1,9 @@
-Version v1: version-913142fd943640d2
-Version v2: version-913142fd943640d2
+Version v1: version-4e426689616b482d
+Version v2: version-4e426689616b482d
 ================================================================================
 
 
-Different Default values (771):
+Different Default values (775):
 ----------------------------------------
   AccessoryDescription.Instance
     v1: '__api_dump_no_string_value__'
@@ -16,6 +16,9 @@ Different Default values (771):
     v2: 'nullptr'
   AnimationNodeDefinition.InputPinData
     v1: '\x01'
+    v2: '__api_dump_not_serializable__'
+  AnimationRigData.Generic
+    v1: '����'
     v2: '__api_dump_not_serializable__'
   AnimationRigData.label
     v1: '\x01'
@@ -502,7 +505,7 @@ Different Default values (771):
     v2: '1'
   DebugSettings.InstanceCount
     v1: '__api_dump_skipped_class__'
-    v2: '915'
+    v2: '914'
   DebugSettings.IsScriptStackTracingEnabled
     v1: '__api_dump_skipped_class__'
     v2: 'true'
@@ -517,7 +520,7 @@ Different Default values (771):
     v2: 'false'
   DebugSettings.RobloxVersion
     v1: '__api_dump_skipped_class__'
-    v2: '0.713.0.7130910'
+    v2: '0.717.0.7170982'
   DebugSettings.TickCountPreciseOverride
     v1: '__api_dump_skipped_class__'
     v2: 'Precise'
@@ -934,7 +937,7 @@ Different Default values (771):
     v2: '112639'
   NetworkSettings.FreeMemoryMBytes
     v1: '__api_dump_skipped_class__'
-    v2: '96575.1172'
+    v2: '98408.8281'
   NetworkSettings.HttpProxyEnabled
     v1: '__api_dump_skipped_class__'
     v2: 'false'
@@ -1295,6 +1298,9 @@ Different Default values (771):
   Player.HealthDisplayDistance
     v1: '__api_dump_skipped_class__'
     v2: '100'
+  Player.InputLatency
+    v1: '__api_dump_skipped_class__'
+    v2: '0'
   Player.InternalCharacterAppearanceLoaded
     v1: '__api_dump_skipped_class__'
     v2: 'false'
@@ -1472,6 +1478,9 @@ Different Default values (771):
   PoseBase.Weight
     v1: '__api_dump_class_not_creatable__'
     v2: '1'
+  ProceduralModel.Generator
+    v1: '__api_dump_no_string_value__'
+    v2: 'nullptr'
   ProximityPrompt.RootLocalizationTable
     v1: '__api_dump_no_string_value__'
     v2: 'nullptr'
@@ -1597,7 +1606,7 @@ Different Default values (771):
     v2: '__api_dump_not_serializable__'
   RunService.ClientGitHash
     v1: '__api_dump_class_not_creatable__'
-    v2: '62a35eee475c0f763aac3e4c000e3f1e71ca5d5
+    v2: 'add2a7b69c824cc9b4b30f69c45a0f3ec3d3ff8
   RunService.FrameNumber
     v1: '__api_dump_class_not_creatable__'
     v2: '0'
@@ -1724,6 +1733,9 @@ Different Default values (771):
   SlimAnimationDataEntity.EntitySource
     v1: '__api_dump_no_string_value__'
     v2: 'nullptr'
+  SlimAnimationDataEntity.SlimInstanceHashes
+    v1: ''
+    v2: '__api_dump_not_serializable__'
   Sound.SoundGroup
     v1: '__api_dump_no_string_value__'
     v2: 'nullptr'
@@ -1783,7 +1795,7 @@ Different Default values (771):
     v2: '0'
   Stats.InstanceCount
     v1: '__api_dump_class_not_creatable__'
-    v2: '1063'
+    v2: '1062'
   Stats.MemoryTrackingEnabled
     v1: '__api_dump_class_not_creatable__'
     v2: 'true'
@@ -2321,8 +2333,8 @@ Different Default values (771):
 
 ================================================================================
 Summary:
-  Total: 3817
-  Same: 3046
-  Different: 771
+  Total: 3855
+  Same: 3080
+  Different: 775
   Only v1: 0
   Only v2: 0

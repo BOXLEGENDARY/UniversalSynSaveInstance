@@ -1,4 +1,4 @@
-version-913142fd943640d2
+version-7091b4c2589245e0
 
 Classes that do NOT inherit from Object:
 ----------------------------------------
@@ -17,11 +17,13 @@ EditableMesh does not inherit from Instance
 ExecutedRemoteCommand does not inherit from Instance
 MLSession does not inherit from Instance
 OutputLink does not inherit from Instance
+PluginConnection does not inherit from Instance
 TerrainIterateOperation does not inherit from Instance
 TerrainModifyOperation does not inherit from Instance
 TerrainReadOperation does not inherit from Instance
 TerrainWriteOperation does not inherit from Instance
 VideoSampler does not inherit from Instance
+VirtualInput does not inherit from Instance
 VoxelBuffer does not inherit from Instance
 WebStreamClient does not inherit from Instance
 

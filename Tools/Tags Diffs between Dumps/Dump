@@ -1,9 +1,9 @@
-Version v1: version-913142fd943640d2
-Version v2: version-913142fd943640d2
+Version v1: version-4e426689616b482d
+Version v2: version-4e426689616b482d
 ================================================================================
 
 
-Different Tags (490):
+Different Tags (498):
 ----------------------------------------
   ActivityHistoryEventService
     v1: ['NotCreatable', 'Service']
@@ -659,6 +659,9 @@ Different Tags (490):
   ILegacyStudioBridge
     v1: ['NotCreatable', 'Service']
     v2: []
+  ImageScreenCaptureService
+    v1: ['NotCreatable', 'Service']
+    v2: ['NotCreatable', 'NotReplicated', 'Service']
   IncrementalPatchBuilder
     v1: ['NotCreatable', 'Service', 'NotReplicated']
     v2: ['NotCreatable', 'NotReplicated']
@@ -719,6 +722,9 @@ Different Tags (490):
   IntConstrainedValue
     v1: ['Deprecated']
     v2: []
+  InternalMessagingServiceVerifier
+    v1: ['NotCreatable', 'Service', 'NotReplicated']
+    v2: ['NotCreatable', 'NotReplicated']
   InventoryPages
     v1: ['NotCreatable', 'NotReplicated']
     v2: []
@@ -758,6 +764,21 @@ Different Tags (490):
   LogService
     v1: ['NotCreatable', 'Service']
     v2: ['NotCreatable', 'NotReplicated', 'Service']
+  LogService.Error
+    v1: ['CustomLuaState']
+    v2: []
+  LogService.Info
+    v1: ['CustomLuaState']
+    v2: []
+  LogService.Log
+    v1: ['CustomLuaState']
+    v2: []
+  LogService.Output
+    v1: ['CustomLuaState']
+    v2: []
+  LogService.Warn
+    v1: ['CustomLuaState']
+    v2: []
   LoginService
     v1: ['NotCreatable', 'Service']
     v2: ['Service']
@@ -971,6 +992,9 @@ Different Tags (490):
   PostEffect
     v1: ['NotCreatable']
     v2: []
+  Preloaded
+    v1: ['NotCreatable', 'Service']
+    v2: ['NotCreatable', 'NotReplicated']
   ProcessInstancePhysicsService
     v1: ['NotCreatable', 'Service']
     v2: ['Service']
@@ -1478,8 +1502,8 @@ Different Tags (490):
 
 ================================================================================
 Summary:
-  Total: 8613
-  Same: 8123
-  Different: 490
+  Total: 8737
+  Same: 8239
+  Different: 498
   Only v1: 0
   Only v2: 0

@@ -1,4 +1,4 @@
-version-53373454f7df4478
+version-7091b4c2589245e0
 
 AudioDeviceInput.Player {Player}
 
@@ -67,6 +67,8 @@ NoCollisionConstraint.Part0 {BasePart}
 NoCollisionConstraint.Part1 {BasePart}
 
 Model.PrimaryPart {BasePart}
+
+ProceduralModel.Generator {ModuleScript}
 
 Workspace.CurrentCamera {Camera}
 

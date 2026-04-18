@@ -20,7 +20,7 @@ def write_dump_file(content, filename="Dump", script_dir=None, skip_lines=1):
     path = os.path.join(script_dir, filename)
 
     if os.path.exists(path):
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             old = f.read().splitlines()
         new = content.splitlines()
 
@@ -30,8 +30,9 @@ def write_dump_file(content, filename="Dump", script_dir=None, skip_lines=1):
             )
             return False
 
-    with open(path, "w") as f:
+    with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
     print("File written:", path)
     return True
 

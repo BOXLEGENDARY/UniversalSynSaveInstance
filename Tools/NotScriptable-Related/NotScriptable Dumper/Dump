@@ -1,4 +1,4 @@
-version-8b02f75e5b5343a1
+version-4e426689616b482d
 
 EditableImage.ImageData {BinaryString}
 
@@ -13,6 +13,7 @@ AnimationClip.GuidBinaryString {BinaryString}
 
 AnimationNodeDefinition.InputPinData {BinaryString}
 
+AnimationRigData.Generic {BinaryString}
 AnimationRigData.label {BinaryString}
 AnimationRigData.name {BinaryString}
 AnimationRigData.parent {BinaryString}
@@ -125,6 +126,14 @@ MaterialVariant.TexturePack {ContentId}
 
 MetaBreakpointContext.ContextDataInternal {string}
 
+NetworkSettings.InboundNetworkLossPercent {float}
+NetworkSettings.InboundNetworkMaxDelayMs {int}
+NetworkSettings.InboundNetworkMinDelayMs {int}
+NetworkSettings.NetworkEmulationEnabled {bool}
+NetworkSettings.OutboundNetworkLossPercent {float}
+NetworkSettings.OutboundNetworkMaxDelayMs {int}
+NetworkSettings.OutboundNetworkMinDelayMs {int}
+
 BasePart.Color3uint8 {Color3uint8}
 BasePart.MaterialVariantSerialized {string}
 BasePart.size {Vector3}
@@ -181,6 +190,8 @@ Model.ScaleFactor {float}
 Model.SlimHash {SharedString}
 Model.WorldPivotData {OptionalCoordinateFrame}
 
+ProceduralModel.Dirty {bool}
+
 Workspace.AvatarUnificationMode {AvatarUnificationMode}
 Workspace.CollisionGroupData {BinaryString}
 Workspace.EnableSLIMAvatars {RolloutState}
@@ -189,6 +200,7 @@ Workspace.FluidForces {FluidForces}
 Workspace.IKControlConstraintSupport {IKControlConstraintSupport}
 Workspace.LayeredClothingCacheOptimizations {RolloutState}
 Workspace.MeshPartHeadsAndAccessories {MeshPartHeadsAndAccessories}
+Workspace.MeshStreamingAndImprovedLods {RolloutState}
 Workspace.ModelStreamingBehavior {ModelStreamingBehavior}
 Workspace.MoverConstraintRootBehavior {MoverConstraintRootBehaviorMode}
 Workspace.NextGenerationReplication {RolloutState}
@@ -212,16 +224,19 @@ Workspace.TouchEventsUseCollisionGroups {RolloutState}
 Workspace.TouchesUseCollisionGroups {bool}
 Workspace.UseFixedSimulation {RolloutState}
 Workspace.UseNewLuauTypeSolver {RolloutState}
-UseNewLuauTypeSolver -> EnableSLIMAvatars {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> LayeredClothingCacheOptimizations {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> NextGenerationReplication {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> NextGenerationReplicationAlias {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> PhysicsImprovedSleep {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> PlayerScriptsUseInputActionSystem {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> PlayerScriptsUseInputActionSystemAlias {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> TouchEventsUseCollisionGroups {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> UseFixedSimulation {POTENTIAL PROXY}
-UseNewLuauTypeSolver -> UseFixedSimulationAlias {POTENTIAL PROXY}
+Workspace.ValidateEnabledProximityPrompt {RolloutState}
+ValidateEnabledProximityPrompt -> EnableSLIMAvatars {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> LayeredClothingCacheOptimizations {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> MeshStreamingAndImprovedLods {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> NextGenerationReplication {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> NextGenerationReplicationAlias {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> PhysicsImprovedSleep {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> PlayerScriptsUseInputActionSystem {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> PlayerScriptsUseInputActionSystemAlias {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> TouchEventsUseCollisionGroups {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> UseFixedSimulation {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> UseFixedSimulationAlias {POTENTIAL PROXY}
+ValidateEnabledProximityPrompt -> UseNewLuauTypeSolver {POTENTIAL PROXY}
 SignalBehavior2 -> SignalBehavior {POTENTIAL PROXY}
 SignalBehavior2 -> SignalBehaviorAlias {POTENTIAL PROXY}
 

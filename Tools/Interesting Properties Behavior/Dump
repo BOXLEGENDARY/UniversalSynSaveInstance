@@ -1,4 +1,4 @@
-version-913142fd943640d2
+version-4e426689616b482d
 
 Object.className {PreferredDescriptorName: ClassName}
 
@@ -451,6 +451,8 @@ Camera.focus {CanLoad Only} {Deprecated} {PreferredDescriptorName: Focus}
 HopperBin.Command {WriteOnly} {CanLoad Only}
 HopperBin.TextureName {WriteOnly} {CanLoad Only}
 
+ProceduralModel.GenerationError {CanSave Only}
+
 Workspace.CollisionGroups {WriteOnly} {CanLoad Only}
 Workspace.StreamingPauseMode {CanLoad Only}
 
@@ -515,6 +517,8 @@ PolicyService is NotCreatable but PolicyService.IsLuobuServer has default: "Unkn
 
 Pose.MaskWeight {CanLoad Only} {Deprecated}
 
+RealtimeMedia.IsConnected {CanSave Only}
+
 RenderSettings.EnableFRM {CanLoad Only}
 
 RobloxSerializableInstance.Data {Uses NotScriptable Type without the tag - BinaryString}
@@ -560,7 +564,7 @@ ServiceVisibilityService.HiddenServices {Uses NotScriptable Type without the tag
 ServiceVisibilityService.VisibleServices {Uses NotScriptable Type without the tag - BinaryString}
 ServiceVisibilityService is NotCreatable but ServiceVisibilityService.HiddenServices has default: ""
 
-SlimAnimationDataEntity is NotCreatable but SlimAnimationDataEntity.Handle has default: "-1"
+SlimAnimationDataEntity is NotCreatable but SlimAnimationDataEntity.EntityScale has default: "1"
 
 Smoke.Opacity {CanLoad Only}
 Smoke.RiseVelocity {CanLoad Only}
@@ -589,6 +593,14 @@ StudioCameraService is NotCreatable but StudioCameraService.FocusDistance has de
 StudioData is NotCreatable but StudioData.EnableScriptCollabByDefaultOnLoad has default: "false"
 
 StudioPublishService is NotCreatable but StudioPublishService.PublishLocked has default: "false"
+
+StudioScreenshotCapture.BufferFormat {CanSave Only}
+StudioScreenshotCapture.BufferStatus {CanSave Only}
+StudioScreenshotCapture.OriginalSize {CanSave Only}
+StudioScreenshotCapture.Position {CanSave Only}
+StudioScreenshotCapture.Resolution {CanSave Only}
+StudioScreenshotCapture.UICaptureMode {CanSave Only}
+StudioScreenshotCapture is NotCreatable but StudioScreenshotCapture.BufferFormat has default: "RGBA8"
 
 StudioService.UseLocalSpace {CanLoad Only}
 
@@ -634,7 +646,7 @@ ChatInputBarConfiguration is NotCreatable but ChatInputBarConfiguration.Absolute
 
 ChatWindowConfiguration is NotCreatable but ChatWindowConfiguration.AbsolutePosition has default: "0, 0"
 
-TextChatMessage is NotCreatable but TextChatMessage.ForModeration has default: "false"
+TextChatMessage is NotCreatable but TextChatMessage.ChatActionType has default: ""
 
 ChatWindowMessageProperties is NotCreatable but ChatWindowMessageProperties.TextColor3 has default: "1, 1, 1"
 
@@ -729,9 +741,10 @@ ValueTypes found exclusively in NotScriptable properties: 13
   - UniqueId
   - Vector3int16
 
-Properties with NotScriptable tag: 74
+Properties with NotScriptable tag: 76
   - AnimationClip.GuidBinaryString
   - AnimationNodeDefinition.InputPinData
+  - AnimationRigData.Generic
   - AnimationRigData.label
   - AnimationRigData.name
   - AnimationRigData.parent
@@ -787,6 +800,7 @@ Properties with NotScriptable tag: 74
   - RolloutValidation.ThirdBinaryString
   - RolloutValidation.ThirdSharedString
   - RotationCurve.ValuesAndTimes
+  - SlimAnimationDataEntity.SlimInstanceHashes
   - StyleQuery.ConditionsSerialize
   - StyleRule.PropertiesSerialize
   - StyleRule.PropertyTransitionsSerialize
@@ -834,6 +848,7 @@ CREATABLE SIBLINGS OF NOTCREATABLE CLASSES
 NotCreatable classes that have creatable siblings: 33
   - BackpackItem (parent: Model) has creatable siblings:
       - Actor
+      - ProceduralModel
   - BasePart (parent: PVInstance) has creatable siblings:
       - Camera
       - Model
@@ -946,6 +961,7 @@ NotCreatable classes that have creatable siblings: 33
       - VectorForce
   - Status (parent: Model) has creatable siblings:
       - Actor
+      - ProceduralModel
   - SurfaceGuiBase (parent: LayerCollector) has creatable siblings:
       - BillboardGui
       - ScreenGui
@@ -979,3 +995,4 @@ NotCreatable classes that have creatable siblings: 33
       - WorldModel
   - WorldRoot (parent: Model) has creatable siblings:
       - Actor
+      - ProceduralModel
