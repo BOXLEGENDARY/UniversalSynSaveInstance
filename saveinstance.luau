@@ -3,8 +3,8 @@
 --!divine-intellect
 -- https://discord.gg/wx4ThpAsmw
 
-local function string_find(s, pattern)
-	return string.find(s, pattern, nil, true)
+local function string_find(s, pattern, init)
+	return string.find(s, pattern, init, true)
 end
 
 local function ArrayToDict(t, hydridMode, valueOverride, typeStrict)
@@ -2275,7 +2275,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	-- 	end
 	-- end
 
-	local currentstr, currentsize, totalsize, chunks = "", 0, 0, table.create(1)
+	local totalsize, chunks = 0, table.create(1)
 	local savebuffer, savebuffer_size = {}, 1
 	local header =
 		'<!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw --><roblox version="4">'
@@ -2593,6 +2593,21 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	end
 
 	local SafeMode = OPTIONS.SafeMode
+	local LP_UserId, LP_Name, ANON_UserId, ANON_Name, AnonymizableTypes
+
+	do
+		local anonymous = OPTIONS.Anonymous
+		local lp = service.Players.LocalPlayer
+
+		if anonymous and lp then
+			AnonymizableTypes = ArrayToDict({ "double", "float", "int", "int64", "string" })
+			LP_UserId, LP_Name = lp.UserId, lp.Name
+
+			local istable = type(anonymous) == "table"
+			ANON_UserId = istable and anonymous.UserId or 1
+			ANON_Name = istable and anonymous.Name or "Roblox"
+		end
+	end
 
 	local FilePath = OPTIONS.FilePath
 	local SaveCacheInterval = OPTIONS.SaveCacheInterval
@@ -3031,6 +3046,41 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		return InstanceOverride
 	end
 
+	local function gsubCaseInsensitive(input, search, replacement) -- * Credits to friends
+		local inputLower = string.lower(input)
+		search = string.lower(search)
+
+		if not string_find(input, search) then
+			return input
+		end
+
+		local lastFinish = 0
+		local subStrings = {}
+		local search_len = #search
+		local input_len = #input
+		while search_len <= input_len - lastFinish do
+			local init = lastFinish + 1
+
+			local start, finish = string_find(inputLower, search, init)
+
+			if start == nil then
+				break
+			end
+
+			table.insert(subStrings, string.sub(input, init, start - 1))
+
+			lastFinish = finish
+		end
+
+		if lastFinish == 0 then
+			return input
+		end
+
+		table.insert(subStrings, string.sub(input, lastFinish + 1))
+
+		return table.concat(subStrings, replacement)
+	end
+
 	local function filterPropVal(result, propertyName, category) -- ? raw == nil thanks to SerializedDefaultAttributes; "can't get value" - due to WriteOnly tag;  "Invalid value for enum " - "StreamingPauseMode" (old games probably) Roexec
 		return result == nil
 			or result == "can't get value"
@@ -3161,31 +3211,23 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		return prop_list
 	end
 
-	local CHUNK_LIMIT = 200 * 1024 * 1024 -- string length overflow prevention
-	local function save_cache(final)
+	local function save_cache()
 		local savestr = table.concat(savebuffer)
-		currentstr ..= savestr -- TODO: Causes "not enough memory" error on some exec
 
-		-- writefile(placename, totalstr)
-		-- appendfile(placename, savestr) -- * supposedly causes uneven amount of Tags (e.g. <Item> must be closed with </Item> but sometimes there's more of one than the other). While being under load, the function produces unexpected output?
 		local savestr_len = #savestr
 		totalsize += savestr_len
-		currentsize += savestr_len
+
+		-- store chunk as-is (NO concatenation accumulation)
+		table.insert(chunks, savestr)
 
 		table.clear(savebuffer)
 		savebuffer_size = 1
 
-		if CHUNK_LIMIT < currentsize or final then
-			table.insert(chunks, { size = currentsize, str = currentstr })
-			currentstr, currentsize = "", 0
-		end
-
 		if StatusText then
 			StatusText.Text = "Saving.. Size: " .. get_size_format()
 		end
-		-- ? Needed for at least 1fps (status text)
-		-- task.wait()
-		wait_for_render()
+
+		wait_for_render() -- ? Needed for at least 1fps (status text)
 	end
 
 	local function save_specific(className, properties)
@@ -3409,6 +3451,17 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 
 						if SharedStringOverwrite and ValueType == "BinaryString" then -- TODO: Convert this to table if more types are added
 							ValueType = "SharedString"
+						end
+
+						if AnonymizableTypes and AnonymizableTypes[ValueType] then
+							-- TODO This might cause issues on non-unique Usernames (ex. "Cake" if game is about cakes then everything supposedly related to your name will be replaced with "Roblox"); Certain UserIds might also affect numbers, like if your UserId is 2481848 and there is some number that matches 2481848 then that number will be replaced with 1, potentially making the number incorrect.
+							-- TODO So for now it's best to keep this disabled by default
+
+							if ValueType == "string" then
+								raw = gsubCaseInsensitive(raw, LP_Name, ANON_Name)
+							elseif raw == LP_UserId then
+								raw = ANON_UserId
+							end
 						end
 
 						local tag, value
@@ -3801,76 +3854,35 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		savebuffer[savebuffer_size] =
 			"</roblox><!-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw -->"
 		savebuffer_size += 1
-		save_cache(true)
+		save_cache()
 		do
-			-- ! Assuming we only write to file once hence why we only filter once
-			-- TODO This might cause issues on non-unique Usernames (ex. "Cake" if game is about cakes then everything supposedly related to your name will be replaced with "Roblox"); Certain UserIds might also affect numbers, like if your UserId is 2481848 and there is some number that goes like "1.248184818837" then that the matched part will be replaced with 1, potentially making the number incorrect.
-			-- TODO So for now it's best to keep this disabled by default
-			-- TODO It's also not smart to filter entire file string at the end as this might also affect decompiled scripts content, which has no way of containing any user-related information. It would be better to use gsub in string Descriptor and such
-			if OPTIONS.Anonymous then
-				local LocalPlayer = service.Players.LocalPlayer
-				if LocalPlayer then
-					local function gsubCaseInsensitive(input, search, replacement) -- * Credits to friends
-						local inputLower = string.lower(input)
+			local function buildFinalString(chunks)
+				local parts = table.create(#chunks + 1)
+				parts[1] = header
 
-						search = string.lower(search)
+				table.move(chunks, 1, #chunks, 2, parts)
 
-						local lastFinish = 0
-						local subStrings = {}
-						local search_len = #search
-						local input_len = #input
-						while search_len <= input_len - lastFinish do
-							local init = lastFinish + 1
-
-							local start, finish = string.find(inputLower, search, init, true)
-
-							if start == nil then
-								break
-							end
-
-							table.insert(subStrings, string.sub(input, init, start - 1))
-
-							lastFinish = finish
-						end
-
-						if lastFinish == 0 then
-							return input
-						end
-
-						table.insert(subStrings, string.sub(input, lastFinish + 1))
-
-						return table.concat(subStrings, replacement)
-					end
-
-					local Anonymous = type(OPTIONS.Anonymous) == "table" and OPTIONS.Anonymous
-						or { UserId = "1", Name = "Roblox" }
-
-					for _, chunk in chunks do
-						chunk.str = gsubCaseInsensitive(
-							string.gsub(chunk.str, LocalPlayer.UserId, Anonymous.UserId),
-							LocalPlayer.Name,
-							Anonymous.Name
-						)
-					end
-				end
+				return table.concat(parts)
 			end
 
 			local Callback = OPTIONS.Callback
 			if Callback then
-				local totalstr = header
-				for _, chunk in chunks do
-					totalstr ..= chunk.str
-				end
-				Callback(totalstr, chunks, totalsize)
+				Callback(buildFinalString(chunks), chunks)
 			elseif OPTIONS.AlternativeWritefile and appendfile then
 				local SEGMENT_SIZE = 4145728 -- Celery has an arbitrary savefile/appendfile size limit of ~4MB for reasons unknown. This is a workaround to save the file in segments.
+				local totallen = 0
+				for _, chunk in chunks do
+					totallen += math.ceil(#chunk / SEGMENT_SIZE)
+				end
 
-				local totallen, currentlen = math.ceil(totalsize / SEGMENT_SIZE), 1
+				local currentlen = 0
 
 				for _, chunk in chunks do
-					local length = math.ceil(chunk.size / SEGMENT_SIZE)
-					for i = 1, length do
-						local savestr = string.sub(chunk.str, (i - 1) * SEGMENT_SIZE + 1, i * SEGMENT_SIZE)
+					local chunk_len = #chunk
+					local offset = 1
+
+					while offset <= chunk_len do
+						local savestr = string.sub(chunk, offset, offset + SEGMENT_SIZE - 1)
 
 						run_with_loading(
 							"Writing to File " .. math.round(currentlen / totallen * 100) .. "% (Depends on Exec)",
@@ -3880,25 +3892,23 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 							placename,
 							savestr
 						)
-						currentlen += 1
 
-						if i ~= length then
+						currentlen += 1
+						offset += SEGMENT_SIZE
+
+						if offset <= chunk_len then
 							task.wait()
 						end
 					end
 				end
 			else
-				local totalstr = header
-				for _, chunk in chunks do
-					totalstr ..= chunk.str
-				end
 				run_with_loading(
 					"Writing " .. get_size_format() .. " to File (Depends on Exec)",
 					nil,
 					true,
 					writefile,
 					placename,
-					totalstr
+					buildFinalString(chunks)
 				)
 			end
 		end
