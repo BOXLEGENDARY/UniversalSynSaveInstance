@@ -2214,13 +2214,13 @@ local GLOBAL_ENV = getgenv and getgenv() or _G or shared
 --- @field IgnoreNotArchivable boolean -- Ignores the Archivable property and saves Non-Archivable instances. ___Default:___ true
 --- @field IgnorePropertiesOfNotScriptsOnScriptsMode boolean -- Ignores property of every instance that is not a script in "scripts" mode. ___Default:___ false
 --- @field IgnoreSpecialProperties boolean -- Prevents calls to `gethiddenproperty` and uses fallback methods instead. This also helps with crashes. If your file is corrupted after saving, you can try turning this on. ___Default:___ false
---- @field IsolateLocalPlayer boolean -- Saves Children of LocalPlayer as separate folder and prevents any instance of ClassName Player with .Name identical to LocalPlayer.Name from saving. ___Default:___ false
---- @field IsolateStarterPlayer boolean -- If enabled, StarterPlayer will be cleared and the saved starter player will be placed into folders. ___Default:___ false
---- @field IsolateLocalPlayerCharacter boolean -- Saves Children of LocalPlayer.Character as separate folder and prevents any instance of ClassName Player with .Name identical to LocalPlayer.Name from saving. ___Default:___ false
+--- @field IsolateStarterPlayer boolean -- Saves StarterPlayer as separate folder, children of the original instance will be ignored. ___Default:___ false
+--- @field IsolatePlayers boolean -- Saves All Players as separate folder, children of the original instance will be ignored. ___Default:___ false
+--- @field IsolateLocalPlayer boolean -- Saves LocalPlayer as separate folder, original instance will be ignored. ___Default:___ false
+--- @field IsolateLocalPlayerCharacter boolean -- Saves LocalPlayer.Character as separate folder, original instance will be ignored. ___Default:___ false
 --- @field SavePlayerCharacters boolean -- Ignore player characters while saving. ___Default:___ false
---- @field SaveNotCreatable boolean -- * Includes non-serializable instances as Folder objects (Name is misleading as this is mostly a fix for certain NilInstances and isn't always related to NotCreatable). This option is automatically enabled by options like: IsolatePlayers, IsolateLocalPlayer, etc. ___Default:___ false
+--- @field SaveNotCreatable boolean -- * Includes non-serializable instances as Folder objects (Name is misleading as this is mostly a fix for certain NilInstances and isn't always related to NotCreatable). Other options also enable it, like: IsolatePlayers, IsolateLocalPlayer, etc. ___Default:___ false
 --- .NotCreatableFixes table<Instance.ClassName> -- * {"Player"} is the same as {Player = "Folder"}; Format like {SpawnLocation = "Part"} is only to be used when SpawnLocation inherits from "Part" AND "Part" is Creatable. ___Default:___ { "", "Player", "PlayerScripts", "PlayerGui", "TouchTransmitter" }
---- @field IsolatePlayers boolean -- * This option does save players, it's just they won't show up in Studio and can only be viewed through the place file code (in text editor). More info at https://github.com/luau/UniversalSynSaveInstance/issues/2. ___Default:___ false
 --- @field AlternativeWritefile boolean -- * Splits file content string into segments and writes them using appendfile. This might help with crashes when it starts writing to file. Though there is a risk of appendfile working incorrectly on some executors. ___Default:___ true
 --- @field IgnoreDefaultPlayerScripts boolean -- * **RISKY: Ignores Default PlayerScripts like PlayerModule & RbxCharacterSounds. Prevents crashes on certain Executors. ___Default:___ true
 --- @field IgnoreSharedStrings boolean -- * **RISKY: FIXES CRASHES (TEMPORARY, TESTED ON ROEXEC ONLY). FEEL FREE TO DISABLE THIS TO SEE IF IT WORKS FOR YOU**. ___Default:___ true
@@ -2330,6 +2330,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		ShowStatus = true,
 		KillAllScripts = true,
 		SafeMode = true,
+		BoostFPS = false,
 		ShutdownWhenDone = false,
 		AntiIdle = true,
 		Anonymous = false,
@@ -2628,7 +2629,6 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 		__DEBUG_MODE = warn
 	end
 
-	local SafeMode = OPTIONS.SafeMode
 	local LP_UserId, LP_Name, ANON_UserId, ANON_Name, AnonymizableTypes
 
 	do
@@ -4108,7 +4108,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 	end
 
 	do
-		if SafeMode then
+		if OPTIONS.SafeMode then
 			task.spawn(function()
 				local LocalPlayer = GetLocalPlayer()
 
@@ -4149,6 +4149,12 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 				-- task.delay(10, service.GuiService.ClearError, service.GuiService)
 			end)
 
+			if CustomOptions_valid["BoostFPS"] == nil then
+				OPTIONS.BoostFPS = true
+			end
+		end
+
+		if OPTIONS.BoostFPS then
 			pcall(function()
 				service.RunService:Set3dRenderingEnabled(false)
 			end)
@@ -4293,7 +4299,7 @@ local function synsaveinstance(CustomOptions, CustomOptions2)
 			return debug.traceback(err)
 		end)
 
-		if SafeMode then
+		if OPTIONS.BoostFPS then
 			pcall(function()
 				local max = 5
 				task.delay(
