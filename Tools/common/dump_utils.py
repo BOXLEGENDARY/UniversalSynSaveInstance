@@ -38,6 +38,18 @@ def write_dump_file(content, filename="Dump", script_dir=None, skip_lines=1):
 
 
 def normalize_v2_dump(data):
+    class_names = {c.get("name") for c in data["classes"]}
+
+    type_renames = {
+        "CoordinateFrame": "CFrame",
+        "Rect2D": "Rect",
+        "Vector3Int16": "Vector3int16",
+        "Vector2Int16": "Vector2int16",
+    }
+
+    def apply_rename(type_name):
+        return type_renames.get(type_name, type_name)
+
     res = {"Classes": [], "Enums": []}
     for c in data["classes"]:
         nc = {
@@ -109,20 +121,26 @@ def normalize_v2_dump(data):
                     "CanLoad": m.get("isSerialized"),
                     "CanSave": m.get("isSerialized"),
                 }
-                dv = (
-                    mt["defaultValue"]
-                    if "defaultValue" in mt and mt["defaultValue"] is not None
-                    else mt.get(
-                        "defaultValueMissingReason", "__api_dump_no_string_value__"
-                    )
-                )
-                if dv.startswith("api_dump_"):
+                
+                dv = mt.get("defaultValue")
+                if dv is None:
+                    dv = mt.get("defaultValueMissingReason", "__api_dump_no_string_value__")
+                
+                if isinstance(dv, str) and dv.startswith("api_dump_"):
                     dv = "__" + dv + "__"
                 nm["Default"] = dv
 
+                # 3. Determine Category and Apply Rename
+                type_name = mt.get("type")
+                category = None
+                if mt.get("isEnum"):
+                    category = "Enum"
+                elif type_name in class_names:
+                    category = "Class"
+
                 nm["ValueType"] = {
-                    "Name": mt.get("type"),
-                    "Category": mt.get("isEnum") and "Enum" or None,
+                    "Name": apply_rename(type_name),
+                    "Category": category,
                     "Capabilities": mt.get("capabilities"),
                 }
 
@@ -133,8 +151,8 @@ def normalize_v2_dump(data):
                     {
                         "Name": a.get("identifier"),
                         "Type": {
-                            "Name": a.get("type"),
-                            "Category": mt.get("isEnum") and "Enum" or None,
+                            "Name": apply_rename(a.get("type")),
+                            "Category": "Enum" if mt.get("isEnum") else ("Class" if a.get("type") in class_names else None),
                         },
                     }
                     for a in (mt.get("arguments"))
@@ -143,8 +161,8 @@ def normalize_v2_dump(data):
                 r = mt.get("results")[0]
 
                 nm["ReturnType"] = {
-                    "Name": r.get("type"),
-                    "Category": mt.get("isEnum") and "Enum" or None,
+                    "Name": apply_rename(r.get("type")),
+                    "Category": "Enum" if mt.get("isEnum") else ("Class" if r.get("type") in class_names else None),
                 }
             nm["Tags"] = m_tags
 
@@ -153,6 +171,9 @@ def normalize_v2_dump(data):
             #         nm[mk] = mv
             nc["Members"].append(nm)
         res["Classes"].append(nc)
+
+    res["Classes"].sort(key=lambda x: x["Name"])
+
     for e in data["enums"]:
         enum = {
             "Name": e.get("name"),
@@ -160,7 +181,28 @@ def normalize_v2_dump(data):
         }
 
         res["Enums"].append(enum)
+
+    res["Enums"].sort(key=lambda x: x["Name"])
+
     return res
+
+
+def sort_v1_dump(data):
+    if "Classes" in data and isinstance(data["Classes"], list):
+        data["Classes"].sort(key=lambda x: x.get("Name", ""))
+
+        for c in data["Classes"]:
+            if "Members" in c and isinstance(c["Members"], list):
+                c["Members"].sort(key=lambda x: x.get("Name", ""))
+
+    if "Enums" in data and isinstance(data["Enums"], list):
+        data["Enums"].sort(key=lambda x: x.get("Name", ""))
+
+        for e in data["Enums"]:
+            if "Items" in e and isinstance(e["Items"], list):
+                e["Items"].sort(key=lambda x: x.get("Name", ""))
+
+    return data
 
 
 def fetch(u):
@@ -331,8 +373,21 @@ def get_api_response(version_hash=None, api_version="v1"):
             result = W(r, normalized)
             save_cache(json.dumps(normalized), v, version_hash)
         else:
-            result = r
-            save_cache(result, v, version_hash)
+            raw_data = r.json()
+            sorted_data = sort_v1_dump(raw_data)
+
+            class W:
+                def __init__(self, orig, data):
+                    self._o, self._d = orig, data
+
+                def json(self):
+                    return self._d
+
+                def __getattr__(self, a):
+                    return getattr(self._o, a)
+
+            result = W(r, sorted_data)
+            save_cache(json.dumps(sorted_data), v, version_hash)
 
         return result, version_hash
 

@@ -1,12 +1,14 @@
-version-d0e6613dc5584cf7
+version-3da9d00a092c4d59
+
+AdGui.FallbackImageContent
 
 Animation.AnimationContent
 
 AudioPlayer.AudioContent
 
-BaseWrap.CageMeshContent
+BackpackItem.TextureContent
 
-WrapLayer.ReferenceMeshContent
+BaseWrap.CageMeshContent
 
 Beam.TextureContent
 
@@ -16,10 +18,8 @@ CharacterMesh.OverlayTextureContent
 
 ClickDetector.CursorIconContent
 
-DragDetector.ActivatedCursorIconContent
-
-FileMesh.MeshContent
-FileMesh.TextureContent
+Clothing.Outfit1Content
+Clothing.Outfit2Content
 
 Decal.ColorMapContent
 Decal.MetalnessMapContent
@@ -27,21 +27,18 @@ Decal.NormalMapContent
 Decal.RoughnessMapContent
 Decal.TextureContent
 
+DragDetector.ActivatedCursorIconContent
+
+FileMesh.MeshContent
+FileMesh.TextureContent
+
 ImageButton.HoverImageContent
 ImageButton.ImageContent
 ImageButton.PressedImageContent
 
-ImageLabel.ImageContent
-
-ScrollingFrame.BottomImageContent
-ScrollingFrame.MidImageContent
-ScrollingFrame.TopImageContent
-
-VideoFrame.VideoContent
-
-AdGui.FallbackImageContent
-
 ImageHandleAdornment.ImageContent
+
+ImageLabel.ImageContent
 
 MaterialVariant.ColorMapContent
 MaterialVariant.EmissiveMaskContent
@@ -49,19 +46,29 @@ MaterialVariant.MetalnessMapContent
 MaterialVariant.NormalMapContent
 MaterialVariant.RoughnessMapContent
 
-Mouse.IconContent
-
 MeshPart.MeshContent
 MeshPart.TextureContent
 
-BackpackItem.TextureContent
+Mouse.IconContent
 
 PackageLink.PackageContent
 PackageLink.PackageContentSerialize
 
+Pants.PantsTemplateContent
+
 ParticleEmitter.TextureContent
 
+PluginToolbarButton.IconContent
+
 ScreenshotHud.CameraButtonIconContent
+
+ScrollingFrame.BottomImageContent
+ScrollingFrame.MidImageContent
+ScrollingFrame.TopImageContent
+
+Shirt.ShirtTemplateContent
+
+ShirtGraphic.TextureContent
 
 Sky.MoonTextureContent
 Sky.SkyboxBackContent
@@ -93,9 +100,13 @@ UIDragDetector.CursorIconContent
 
 UserInputService.MouseIconContent
 
+VideoFrame.VideoContent
+
 VideoPlayer.VideoContent
 
-WrapTextureTransfer.ReferenceCageMeshContent
-
 VideoSampler.VideoContent
+
+WrapLayer.ReferenceMeshContent
+
+WrapTextureTransfer.ReferenceCageMeshContent
 
